@@ -19,8 +19,8 @@ public class UserMngServiceImpl implements UserMngService {
 	
     @Override
     public User find(){
-    	
-    	//teacherDao.delete(teacherDao.findAll().get(0));
+    	 
+    
     	return useMngDao.findAll().get(0);
     	
 	}
