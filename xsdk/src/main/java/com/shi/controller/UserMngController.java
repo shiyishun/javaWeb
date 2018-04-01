@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.shi.common.DictUtil;
+import com.shi.entity.Dict;
 import com.shi.entity.User;
 import com.shi.service.UserMngService;
 @Controller
@@ -21,15 +24,15 @@ public class UserMngController {
 
 	@ResponseBody
 	@RequestMapping(value = "save")
-	public Map<String, Object> save() {
+	public List<Dict>  save() {
       
-		User user = new User();
-		user.setUserNo("0");
-		user.setUserName("张三");
-		user.setPhone("18060905555");
-		userService.save(user);
-		 Map<String, Object> map = new HashMap<String, Object>();
-		 map.put("code", "1");
-		return map;
+//		User user = new User();
+//		user.setUserNo("0");
+//		user.setUserName("张三");
+//		user.setPhone("18060905555");
+//		userService.save(user);
+		List<Dict> dictList = DictUtil.dictCategoryList.get("性别"); 
+
+		return dictList;
 	}
 }

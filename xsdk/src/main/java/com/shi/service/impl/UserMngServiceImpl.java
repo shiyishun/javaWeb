@@ -19,8 +19,7 @@ public class UserMngServiceImpl implements UserMngService {
 	
     @Override
     public User find(){
-    	 
-    
+    	  
     	return useMngDao.findAll().get(0);
     	
 	}

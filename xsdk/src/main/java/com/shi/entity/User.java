@@ -1,6 +1,8 @@
 package com.shi.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -43,6 +45,11 @@ public class User {
     @Column(name = "count")
     private Integer count;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")  
+    private Set<UserRoleRel> UserRoleRelSet = new HashSet<UserRoleRel>();  
+    
+    
+    
 	public String getId() {
 		return id;
 	}
@@ -122,6 +129,16 @@ public class User {
 	public void setCount(Integer count) {
 		this.count = count;
 	}
+
+	public Set<UserRoleRel> getUserRoleRelSet() {
+		return UserRoleRelSet;
+	}
+
+	public void setUserRoleRelSet(Set<UserRoleRel> userRoleRelSet) {
+		UserRoleRelSet = userRoleRelSet;
+	}
+
+
     
 	
 
