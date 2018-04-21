@@ -29,6 +29,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
+
+import com.shi.common.Page;
 import com.shi.dao.BaseDao;
 
 
@@ -254,6 +256,38 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		return this.findList(hqlString);
 	}
 
+	/**
+	 * 返回分页
+	 * hql 查询条件语句 以where开头
+	 * params 查询参数
+	 * currentPage 当前页码
+	 * pageSize 页面记录条数
+	 */
+	@Override
+	public Page<T> getPage(String hql, Map<String, Object> params, int cunrrentPage,
+			int pageSize){
+		
+		Page<T> page = new Page<T>();
+		page.setCunrrentPage(cunrrentPage);
+		page.setPageSize(pageSize);
+	    // 返回分页查询记录
+		String serachHql = "from " + this.clazz.getName() + hql;
+		Query q1 = this.getCurrentSession().createQuery(serachHql);
+		this.setParameterToQuery(q1, params);
+	    List<T> tList =  q1.setFirstResult((page.getCunrrentPage() - 1) * page.getPageSize())
+	    		.setMaxResults(page.getPageSize()).list();
+	    page.setList(tList);
+		// 返回查询总数 
+	    String countHql="select count(*) from "+ this.clazz.getName() + hql;
+	    Query q2 = this.getCurrentSession().createQuery(countHql);
+		this.setParameterToQuery(q2, params);
+		page.setTotalCount((long) q2.uniqueResult());
+	    return page;
+		
+	}
+	
+	
+	
 	/**
 	 * 
 	 * @param hql

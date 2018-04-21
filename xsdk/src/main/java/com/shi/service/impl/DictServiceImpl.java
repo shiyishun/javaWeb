@@ -30,6 +30,7 @@ public class DictServiceImpl implements DictService {
 		DictList = dictDao.findList(" from Dict d order by d.dictCategory asc, d.dictNo asc");
 	
 		for(Dict dict:DictList){
+			// 字典 名称-值对应map形式
 			DictUtil.dictMap.put(dict.getDictName(), dict.getDictValue());
 			// 字典类别
 			if(dict.getDictCategory()!=null){  				

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.Query;
 
+import com.shi.common.Page;
+
 public interface BaseDao<T, ID extends Serializable> {
 
 	public Serializable save(T o);
@@ -52,6 +54,9 @@ public interface BaseDao<T, ID extends Serializable> {
 	public List<T> findTopList(String hql, int topCount);
 
 	public List<T> findAll();
+	
+	public Page<T> getPage(String hql, Map<String, Object> params, int cunrrentPage,
+			int pageSize);
 
 	public List<T> findList(String hql, Map<String, Object> params, int page,
 			int rows);

@@ -17,9 +17,10 @@ import org.hibernate.annotations.GenericGenerator;
 public class Menu {
 
 	@Id
+	@Column(name="menu_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	private String id;
+	private String menuId;
 	
 	@Column(name="parent_id")
 	private String parentId;
@@ -48,13 +49,12 @@ public class Menu {
 	@Column(name="create_time")
 	private Date createTime;
 
-
-	public String getId() {
-		return id;
+	public String getMenuId() {
+		return menuId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
 	public String getParentId() {

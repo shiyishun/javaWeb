@@ -21,9 +21,10 @@ import org.hibernate.annotations.GenericGenerator;
 public class Role {
 
 	@Id
+	@Column(name="role_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	private String id;
+	private String roleId;
 
 	@Column(name="parent_id")
 	private String parentId;
@@ -40,13 +41,13 @@ public class Role {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "role")  
     private Set<UserRoleRel> userRoleRelSet = new HashSet<UserRoleRel>();  
 	
-	
-	public String getId() {
-		return id;
+
+	public String getRoleId() {
+		return roleId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 
 	public String getParentId() {

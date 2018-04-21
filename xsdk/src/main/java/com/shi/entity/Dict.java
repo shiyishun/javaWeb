@@ -13,9 +13,10 @@ import org.hibernate.annotations.GenericGenerator;
 public class Dict {
 
 	@Id
+	@Column(name = "dict_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
-	private String id;
+	private String dictId;
 
 	@Column(name = "dict_no")
 	private String dictNo;
@@ -35,12 +36,12 @@ public class Dict {
 	@Column(name = "desc")
 	private String desc;
 
-	public String getId() {
-		return id;
+	public String getDictId() {
+		return dictId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setDictId(String dictId) {
+		this.dictId = dictId;
 	}
 
 	public String getDictNo() {
@@ -87,10 +88,8 @@ public class Dict {
 		return desc;
 	}
 
-	public void setDesc(String desc) {
+	public void setDictDesc(String desc) {
 		this.desc = desc;
 	}
-	
-	
-	
+
 }

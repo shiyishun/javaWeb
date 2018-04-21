@@ -7,25 +7,13 @@ public class Page<T>
     //当前页码  
     private int cunrrentPage;  
     //全部页码  
-    private int totalPage;  
+    private long totalPage;  
     //全部数据  
-    private int totalCount;  
+    private long totalCount;  
     //每页多少数据  
     private int pageSize;  
     //查询返回结果  
     private List<T> list=new ArrayList<T>();  
-    //分页链接  
-    private String url;  
-      
-    public String getUrl()  
-    {  
-        return url;  
-    }  
-  
-    public void setUrl(String url)  
-    {  
-        this.url = url;  
-    }  
   
     public int getCunrrentPage()  
     {  
@@ -40,7 +28,7 @@ public class Page<T>
         this.cunrrentPage = cunrrentPage;  
     }  
   
-    public int getTotalPage()  
+    public long getTotalPage()  
     {  
         if(totalCount%pageSize==0){  
             totalPage=totalCount/pageSize;  
@@ -53,22 +41,22 @@ public class Page<T>
     public void setTotalPage(int totalPage)  
     {  
         if(totalPage<0){  
-            totalPage=0;  
+            totalPage=1;  
         }  
         this.totalPage = totalPage;  
     }  
   
-    public int getTotalCount()  
+    public long getTotalCount()  
     {  
         return totalCount;  
     }  
   
-    public void setTotalCount(int totalCount)  
+    public void setTotalCount(long l)  
     {  
-        if(totalCount<0){  
-            totalCount=0;  
+        if(l<0){  
+            l=1;  
         }  
-        this.totalCount = totalCount;  
+        this.totalCount = l;  
     }  
   
     public int getPageSize()  
@@ -78,8 +66,8 @@ public class Page<T>
   
     public void setPageSize(int pageSize)  
     {  
-        if(pageSize<20){  
-            pageSize=20;  
+        if(pageSize<10){  
+            pageSize=10;  
         }  
         this.pageSize = pageSize;  
     }  
