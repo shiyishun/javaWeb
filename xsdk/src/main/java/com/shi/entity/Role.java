@@ -32,8 +32,8 @@ public class Role {
 	@Column(name="role_name")
 	private String roleName;
 	
-	@Column(name="desc")
-	private String desc;
+	@Column(name="description")
+	private String description;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -41,7 +41,9 @@ public class Role {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "role")  
     private Set<UserRoleRel> userRoleRelSet = new HashSet<UserRoleRel>();  
 	
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "role")  
+    private Set<RolePermiRel> rolePermiRelSet = new HashSet<RolePermiRel>();  
+   
 	public String getRoleId() {
 		return roleId;
 	}
@@ -66,12 +68,12 @@ public class Role {
 		this.roleName = roleName;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Date getCreateTime() {
@@ -90,7 +92,13 @@ public class Role {
 		this.userRoleRelSet = userRoleRelSet;
 	}
 
+	public Set<RolePermiRel> getRolePermiRelSet() {
+		return rolePermiRelSet;
+	}
 
-	
-	
+	public void setRolePermiRelSet(Set<RolePermiRel> rolePermiRelSet) {
+		this.rolePermiRelSet = rolePermiRelSet;
+	}
+
+
 }

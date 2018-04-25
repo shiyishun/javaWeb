@@ -33,8 +33,8 @@ public class Dict {
 	@Column(name = "parent_id")
 	private String parentId;
 	
-	@Column(name = "desc")
-	private String desc;
+	@Column(name = "description")
+	private String description;
 
 	public String getDictId() {
 		return dictId;
@@ -84,12 +84,12 @@ public class Dict {
 		this.parentId = parentId;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDictDesc(String desc) {
-		this.desc = desc;
+	public void setDictDescription(String description) {
+		this.description = description;
 	}
 
 }

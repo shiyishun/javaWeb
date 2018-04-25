@@ -8,6 +8,10 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name = "tb_user")
@@ -46,7 +50,7 @@ public class User {
     @Column(name = "count")
     private Integer count;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER, mappedBy = "user")  
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
     private Set<UserRoleRel> UserRoleRelSet = new HashSet<UserRoleRel>();  
     
 	public String getUserId() {
@@ -129,6 +133,7 @@ public class User {
 		this.count = count;
 	}
 
+    @JsonIgnore
 	public Set<UserRoleRel> getUserRoleRelSet() {
 		return UserRoleRelSet;
 	}

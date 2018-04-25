@@ -35,4 +35,10 @@ public class UserMngServiceImpl implements UserMngService {
 			int pageSize){
     	return userMngDao.getPage(hql, params, cunrrentPage, pageSize);
     }
+    
+    @Override
+	public User findByLoginName(String loginName){
+    	
+    	return userMngDao.findByLoginName(loginName);
+    }
 }

@@ -14,4 +14,6 @@ public interface UserMngService {
 	
 	public Page<User> getPage(String hql, Map<String, Object> params, int cunrrentPage,
 			int pageSize);
+	
+	public User findByLoginName(String loginName);
 }

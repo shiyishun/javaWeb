@@ -11,41 +11,32 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 
 @Entity
-@Table(name = "tb_user_role_rel")
-public class UserRoleRel {
-
+@Table(name = "tb_role_permi_rel")
+public class RolePermiRel {
+  
+	
     @Id
-    @Column(name = "user_role_rel_id")
+    @Column(name = "role_permi_rel_id")
     @GeneratedValue(generator = "uuid")  
     @GenericGenerator(name = "uuid", strategy = "uuid")  
-    private String userRoleRelId;
-    
-    @ManyToOne(fetch = FetchType.LAZY)  
-    @JoinColumn(name = "user_id")  
-    private User user; 
+    private String rolePermiRelId;
     
     @ManyToOne(fetch = FetchType.LAZY)  
     @JoinColumn(name = "role_id")  
     private Role role;
+    
+    @ManyToOne(fetch = FetchType.LAZY)  
+    @JoinColumn(name = "permi_id")  
+    private Permi permi;
 
-	public String getUserRoleRelId() {
-		return userRoleRelId;
+	public String getRolePermiRelId() {
+		return rolePermiRelId;
 	}
 
-	public void setUserRoleRelId(String userRoleRelId) {
-		this.userRoleRelId = userRoleRelId;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
+	public void setRolePermiRelId(String rolePermiRelId) {
+		this.rolePermiRelId = rolePermiRelId;
 	}
 
 	public Role getRole() {
@@ -54,7 +45,15 @@ public class UserRoleRel {
 
 	public void setRole(Role role) {
 		this.role = role;
-	} 
+	}
+
+	public Permi getPermi() {
+		return permi;
+	}
+
+	public void setPermi(Permi permi) {
+		this.permi = permi;
+	}
     
     
     
