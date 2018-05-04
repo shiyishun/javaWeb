@@ -17,52 +17,53 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_permi")
 public class Permi {
 
-	
 	@Id
-	@Column(name="permi_id")
+	@Column(name = "permi_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	private String permiId;
-	
-	@Column(name="permi_no")
-	private String parentNo;
-	
-	@Column(name="permi_name")
-	private String parentName;
-	
-	@Column(name="description")
-	private String description;
-	
-	@Column(name="req_url")
-	private String reqUrl;
-	
-	@Column(name="is_page")
-	private int isPage;
-	
-	@Column(name="is_menu")
-	private int isMenu;
-	
-	@Column(name="is_action")
-	private int isAction;
-	
-	@Column(name="create_time")
-	private Date createTime;
-	
-	@ManyToOne(fetch = FetchType.LAZY)  
-    @JoinColumn(name = "user_id")  
-    private User user; 
-	
-	@Column(name="is_access")
-	private int isAccess;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "permi")  
-    private Set<RolePermiRel> rolePermiRelSet = new HashSet<RolePermiRel>();  
-	
+	@Column(name = "permi_no")
+	private String permiNo;
+
+	@Column(name = "permi_name")
+	private String permiName;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "req_url")
+	private String reqUrl;
+
+	@Column(name = "is_page")
+	private Integer isPage;
+
+	@Column(name = "is_menu")
+	private Integer isMenu;
+
+	@Column(name = "is_action")
+	private Integer isAction;
+
+	@Column(name = "create_time")
+	private Date createTime;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	@Column(name = "is_access")
+	private Integer isAccess;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "permi")
+	private Set<RolePermiRel> rolePermiRelSet = new HashSet<RolePermiRel>();
+
 	public String getPermiId() {
 		return permiId;
 	}
@@ -71,20 +72,20 @@ public class Permi {
 		this.permiId = permiId;
 	}
 
-	public String getParentNo() {
-		return parentNo;
+	public String getPermiNo() {
+		return permiNo;
 	}
 
-	public void setParentNo(String parentNo) {
-		this.parentNo = parentNo;
+	public void setPermiNo(String permiNo) {
+		this.permiNo = permiNo;
 	}
 
-	public String getParentName() {
-		return parentName;
+	public String getPermiName() {
+		return permiName;
 	}
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
+	public void setPermiName(String permiName) {
+		this.permiName = permiName;
 	}
 
 	public String getDescription() {
@@ -103,27 +104,27 @@ public class Permi {
 		this.reqUrl = reqUrl;
 	}
 
-	public int getIsPage() {
+	public Integer getIsPage() {
 		return isPage;
 	}
 
-	public void setIsPage(int isPage) {
+	public void setIsPage(Integer isPage) {
 		this.isPage = isPage;
 	}
 
-	public int getIsMenu() {
+	public Integer getIsMenu() {
 		return isMenu;
 	}
 
-	public void setIsMenu(int isMenu) {
+	public void setIsMenu(Integer isMenu) {
 		this.isMenu = isMenu;
 	}
 
-	public int getIsAction() {
+	public Integer getIsAction() {
 		return isAction;
 	}
 
-	public void setIsAction(int isAction) {
+	public void setIsAction(Integer isAction) {
 		this.isAction = isAction;
 	}
 
@@ -143,14 +144,22 @@ public class Permi {
 		this.user = user;
 	}
 
-	public int getIsAccess() {
+	public Integer getIsAccess() {
 		return isAccess;
 	}
 
-	public void setIsAccess(int isAccess) {
+	public void setIsAccess(Integer isAccess) {
 		this.isAccess = isAccess;
 	}
-	
-	
-	
+
+	@JSONField(serialize = false)
+	@JsonIgnore
+	public Set<RolePermiRel> getRolePermiRelSet() {
+		return rolePermiRelSet;
+	}
+
+	public void setRolePermiRelSet(Set<RolePermiRel> rolePermiRelSet) {
+		this.rolePermiRelSet = rolePermiRelSet;
+	}
+
 }

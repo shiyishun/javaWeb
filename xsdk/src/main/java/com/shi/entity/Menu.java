@@ -32,19 +32,19 @@ public class Menu {
 	private String menuNo;
 	
 	@Column(name="lever")
-	private int lever;
+	private Integer lever;
 	
 	@Column(name="menu_url")
 	private String menuUrl;
 	
 	@Column(name="is_leaf")
-	private int isLeaf;
+	private Integer isLeaf;
 	
 	@Column(name="menu_icon")
 	private String menuIcon;
 	
 	@Column(name="is_visable")
-	private int isVisable;
+	private Integer isVisable;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -81,11 +81,11 @@ public class Menu {
 		this.menuNo = menuNo;
 	}
 
-	public int getLever() {
+	public Integer getLever() {
 		return lever;
 	}
 
-	public void setLever(int lever) {
+	public void setLever(Integer lever) {
 		this.lever = lever;
 	}
 
@@ -97,11 +97,11 @@ public class Menu {
 		this.menuUrl = menuUrl;
 	}
 
-	public int getIsLeaf() {
+	public Integer getIsLeaf() {
 		return isLeaf;
 	}
 
-	public void setIsLeaf(int isLeaf) {
+	public void setIsLeaf(Integer isLeaf) {
 		this.isLeaf = isLeaf;
 	}
 
@@ -113,11 +113,11 @@ public class Menu {
 		this.menuIcon = menuIcon;
 	}
 
-	public int getIsVisable() {
+	public Integer getIsVisable() {
 		return isVisable;
 	}
 
-	public void setIsVisable(int isVisable) {
+	public void setIsVisable(Integer isVisable) {
 		this.isVisable = isVisable;
 	}
 

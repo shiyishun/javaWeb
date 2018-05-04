@@ -5,9 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shi.dao.PermiDao;
 import com.shi.entity.Permi;
 import com.shi.entity.Role;
 import com.shi.entity.RolePermiRel;
@@ -19,6 +21,14 @@ import com.shi.service.PermiService;
 @Service
 public class PermiServiceImpl implements PermiService {
 
+	@Autowired
+	private PermiDao permiDao;
+	
+	/**
+	 * 获取用户的拥有的权限
+	 * @param user
+	 * @return
+	 */
 	public List<Permi> findByUser(User user){
 		List<Permi> permiList = new ArrayList<Permi>();
 		Set<UserRoleRel> userRoleRelSet = user.getUserRoleRelSet();
@@ -29,6 +39,7 @@ public class PermiServiceImpl implements PermiService {
 		Set<Role> roleSet = new HashSet<Role>();
 		for (UserRoleRel userRoleRel : userRoleRelSet) {  
 			roleSet.add(userRoleRel.getRole());
+		
 		}  
 		//获取角色对应的所有权限
 		for(Role role: roleSet){
@@ -37,10 +48,33 @@ public class PermiServiceImpl implements PermiService {
 			rolePermiRelSet = role.getRolePermiRelSet();
 			for(RolePermiRel rolePermiRel:rolePermiRelSet){
 				permiList.add(rolePermiRel.getPermi());
+				//System.out.println(rolePermiRel.getPermi().getPermiName());
 			}
 		}
-		
 		return permiList;
+	}
+	
+	public List<Permi> findAll(){
+		
+		return permiDao.findAll();
+	}
+	
+	/**
+	 * 查询未拥有的权限
+	 * @param 
+	 * @return
+	 */
+	public List<Permi> HasNoPermis(List<Permi> hasPermiList){
+		 
+		List<Permi> allPermiList = this.findAll();
+		allPermiList.removeAll(hasPermiList);
+		for(Permi permi: allPermiList){
+			// 去掉不可访问的权限
+			if(permi.getIsAccess()!=0){
+				allPermiList.remove(permi);
+			}
+		}
+		return allPermiList;
 	}
 	
 }

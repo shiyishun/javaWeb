@@ -51,7 +51,13 @@ public class User {
     private Integer count;
 
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
-    private Set<UserRoleRel> UserRoleRelSet = new HashSet<UserRoleRel>();  
+    private Set<UserRoleRel> userRoleRelSet = new HashSet<UserRoleRel>();  
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
+    private Set<UserCourseRel> userCourseRelSet = new HashSet<UserCourseRel>();  
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
+    private Set<Mark> markSet = new HashSet<Mark>();
     
 	public String getUserId() {
 		return userId;
@@ -135,16 +141,30 @@ public class User {
 
     @JsonIgnore
 	public Set<UserRoleRel> getUserRoleRelSet() {
-		return UserRoleRelSet;
+		return userRoleRelSet;
 	}
 
 	public void setUserRoleRelSet(Set<UserRoleRel> userRoleRelSet) {
-		UserRoleRelSet = userRoleRelSet;
+		this.userRoleRelSet = userRoleRelSet;
+	}
+
+	@JsonIgnore
+	public Set<UserCourseRel> getUserCourseRelSet() {
+		return userCourseRelSet;
+	}
+
+	public void setUserCourseRelSet(Set<UserCourseRel> userCourseRelSet) {
+		this.userCourseRelSet = userCourseRelSet;
+	}
+
+	public Set<Mark> getMarkSet() {
+		return markSet;
+	}
+
+	public void setMarkSet(Set<Mark> markSet) {
+		this.markSet = markSet;
 	}
 
 
-    
-	
-
-    
+ 
 }

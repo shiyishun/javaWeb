@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,12 +14,14 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,11 +32,13 @@ import com.shi.common.ComUtil;
 import com.shi.common.DictUtil;
 import com.shi.common.Page;
 import com.shi.entity.Dict;
+import com.shi.entity.Menu;
 import com.shi.entity.Permi;
 import com.shi.entity.Role;
 import com.shi.entity.RolePermiRel;
 import com.shi.entity.User;
 import com.shi.entity.UserRoleRel;
+import com.shi.service.MenuService;
 import com.shi.service.PermiService;
 import com.shi.service.RoleMngService;
 import com.shi.service.UserMngService;
@@ -50,6 +55,8 @@ public class UserMngController {
 	private UserRoleRelService userRoleRelService;
     @Autowired
     private PermiService permiService; 
+    @Autowired
+    private MenuService menuService;
 	
 	
 	private static Logger logger = LogManager
@@ -143,8 +150,8 @@ public class UserMngController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "login")
-	public JSONObject login(HttpServletRequest request, String loginName,
-			String password) {
+	public JSONObject login(HttpServletRequest request, HttpServletResponse response,
+			String loginName, String password) {
 
 		User user = userService.findByLoginName(loginName);
 		JSONObject json = new JSONObject();
@@ -155,10 +162,23 @@ public class UserMngController {
 			json.put("code", "2");
 			json.put("errmsg", "密码错误");
 		} else {
-			request.getSession().setAttribute("user", user);
+			List<Permi> permiList = permiService.findByUser(user);
+			List<Permi> noPermiList = permiService.HasNoPermis(permiList);
+//			request.getSession().setAttribute("user", user);
+//			request.getSession().setAttribute("permis", permiList);
+//			request.getSession().setAttribute("noPermis", noPermiList);
+			String token = ComUtil.GetGUID();
+			HashMap<String, Object> userMap = new HashMap<String, Object>();
+			userMap.put("user", user);
+			userMap.put("permis", permiList);
+			userMap.put("noPermis", noPermiList);
+			userMap.put("timestamp", new Date());
+			ComUtil.loginMap.put(token, userMap);
 			json.put("code", "0");
-			json.put("data", "");
-		}
+			json.put("data", token);
+//		    HttpSession session = request.getSession();  
+//		    System.out.println(session.getId());
+		}	
 		return json;
 	}
 
@@ -174,6 +194,8 @@ public class UserMngController {
 
 		JSONObject json = new JSONObject();
 		request.getSession().setAttribute("user", null);
+		request.getSession().setAttribute("permis", null);
+		request.getSession().setAttribute("noPermis", null);
 		json.put("code", "0");
 		json.put("data", "");
 		return json;
@@ -185,17 +207,17 @@ public class UserMngController {
      */
 	@ResponseBody
 	@RequestMapping(value = "permis")
-	public JSONObject permis(HttpServletRequest request) {
+	public JSONObject permis(HttpServletRequest request, HttpServletResponse response) {
 
 		User user = (User) request.getSession().getAttribute("user");
+//		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
 		JSONObject json = new JSONObject();
-		if (user == null) {
-			json.put("code", "11");
-			json.put("errMsg", "获取用户信息失败");
-			return json;
-		}
 		List<Permi> permiList = new ArrayList<Permi>();
 		permiList = permiService.findByUser(user);
+	//	List<Permi> permiList = (List<Permi>) request.getSession().getAttribute("permis");
+//		for(Permi permi: permiList){
+//			System.out.println(permi.getPermiName());
+//		}
 		String jsonText = JSON.toJSONString(permiList, false);
 		JSONArray obj= JSONArray.parseArray(jsonText);
 		json.put("code", "0");
@@ -203,5 +225,16 @@ public class UserMngController {
 
 		return json;
 	}
-
+	
+	@ResponseBody
+	@RequestMapping(value = "has_menus")
+    public JSONObject hasMenus(HttpServletRequest request, HttpServletResponse response){
+		User user = (User) request.getSession().getAttribute("user");
+		List<Map<String, Object>> menuMapList = menuService.findByUser(user);
+		JSONObject json = new JSONObject();
+		json.put("code", "0");
+		json.put("data", menuMapList);
+		return json;
+	}
+    		
 }

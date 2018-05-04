@@ -37,6 +37,16 @@
 	</listener>
 
 	<filter>
+		<filter-name>CorsFilter</filter-name>
+		<filter-class>com.shi.filter.CorsFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CorsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<filter>
 		<filter-name>openSessionInViewerFilter</filter-name>
 		<filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
 	</filter>
@@ -61,6 +71,7 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
 
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>

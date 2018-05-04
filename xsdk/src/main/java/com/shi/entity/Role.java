@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "tb_role")
@@ -92,6 +94,7 @@ public class Role {
 		this.userRoleRelSet = userRoleRelSet;
 	}
 
+    @JsonIgnore
 	public Set<RolePermiRel> getRolePermiRelSet() {
 		return rolePermiRelSet;
 	}
