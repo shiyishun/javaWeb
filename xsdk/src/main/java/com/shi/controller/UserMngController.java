@@ -193,9 +193,11 @@ public class UserMngController {
 	public JSONObject login(HttpServletRequest request) {
 
 		JSONObject json = new JSONObject();
-		request.getSession().setAttribute("user", null);
-		request.getSession().setAttribute("permis", null);
-		request.getSession().setAttribute("noPermis", null);
+//		request.getSession().setAttribute("user", null);
+//		request.getSession().setAttribute("permis", null);
+//		request.getSession().setAttribute("noPermis", null);
+		String token = request.getHeader("token");
+		ComUtil.loginMap.remove(token);
 		json.put("code", "0");
 		json.put("data", "");
 		return json;
@@ -209,8 +211,10 @@ public class UserMngController {
 	@RequestMapping(value = "permis")
 	public JSONObject permis(HttpServletRequest request, HttpServletResponse response) {
 
-		User user = (User) request.getSession().getAttribute("user");
-//		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+//		User user = (User) request.getSession().getAttribute("user");
+		String token = request.getHeader("token");
+		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+		User user = (User) userMap.get("user");
 		JSONObject json = new JSONObject();
 		List<Permi> permiList = new ArrayList<Permi>();
 		permiList = permiService.findByUser(user);
@@ -219,9 +223,9 @@ public class UserMngController {
 //			System.out.println(permi.getPermiName());
 //		}
 		String jsonText = JSON.toJSONString(permiList, false);
-		JSONArray obj= JSONArray.parseArray(jsonText);
+		JSONArray jsonArray= JSONArray.parseArray(jsonText);
 		json.put("code", "0");
-		json.put("data", obj);
+		json.put("data", jsonArray);
 
 		return json;
 	}
@@ -229,7 +233,9 @@ public class UserMngController {
 	@ResponseBody
 	@RequestMapping(value = "has_menus")
     public JSONObject hasMenus(HttpServletRequest request, HttpServletResponse response){
-		User user = (User) request.getSession().getAttribute("user");
+		String token = request.getHeader("token");
+		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+		User user = (User) userMap.get("user");
 		List<Map<String, Object>> menuMapList = menuService.findByUser(user);
 		JSONObject json = new JSONObject();
 		json.put("code", "0");

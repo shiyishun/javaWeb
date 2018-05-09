@@ -1,5 +1,6 @@
 package com.shi.service.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,26 @@ public class DictServiceImpl implements DictService {
 				
 			}
 		}
+	}
+	
+	
+	
+	public Serializable save(Dict dict){
+		
+		Serializable id = dictDao.save(dict);    
+		return id;
+	}
+	
+	public List<Dict> findParent(){
+		List<Dict> DictList = new ArrayList<Dict>();
+		DictList = dictDao.findList(" from Dict d where d.parentId = null order by d.dictNo asc");
+		return DictList;
 		
 	}
+
+	public void delete(Dict dict){
+		
+		dictDao.delete(dict);
+	}
+	
 }

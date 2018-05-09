@@ -24,5 +24,9 @@ public class DictUtil{
     public static Map<String, List<Dict>> dictCategoryList = new HashMap<String, List<Dict>>();
     
     
+    /**
+     * 根据字典分类存储所在的数据字典Map   
+     */
+    public static Map<String, HashMap<String, Object>> dictCategoryMap = new HashMap<String, HashMap<String, Object>>();
     
 }
