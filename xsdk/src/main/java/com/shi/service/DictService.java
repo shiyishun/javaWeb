@@ -13,7 +13,15 @@ public interface DictService {
 	
 	public Serializable save(Dict dict);
 	
+	public Dict getById(String dictId);
+	
 	public List<Dict> findParent();
 	
 	public void delete(Dict dict);
+	
+	public List<Dict> findParentByCache();
+	
+	public void update(Dict dict);
+	
+	public int genNo(String parentId);
 }

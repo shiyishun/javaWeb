@@ -1,5 +1,9 @@
 package com.shi.common;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -22,4 +26,22 @@ public class ComUtil {
 	public static String GetGUID() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
+
+	public static String toMd5Str(String str) throws NoSuchAlgorithmException {
+
+		MessageDigest md = MessageDigest.getInstance("md5");
+		byte[] md5 = md.digest(str.getBytes());
+		return ComUtil.toHex(md5);
+
+	}
+
+	public static String genNo() {
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+
+		String No = "no"+df.format(new Date())+((Math.random()*9+1)*1000);
+		return No;
+	
+	}
+	
 }

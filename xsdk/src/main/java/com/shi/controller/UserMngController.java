@@ -62,48 +62,27 @@ public class UserMngController {
 	private static Logger logger = LogManager
 			.getLogger(UserMngController.class);
 
-	@ResponseBody
-	@RequestMapping(value = "save")
-	public List<Dict> save() {
-
-		User user = new User();
-		user.setUserNo("0");
-		user.setUserName("张三");
-		user.setPhone("18060905555");
-		user.setPwd("123");
-		Role role = roleMngService.findAll().get(0);
-		UserRoleRel userRoleRel = new UserRoleRel();
-		userRoleRel.setRole(role);
-		userRoleRel.setUser(user);
-		Set<UserRoleRel> userRoleRelSet = new HashSet<UserRoleRel>();
-		userRoleRelSet.add(userRoleRel);
-		user.setUserRoleRelSet(userRoleRelSet);
-		userService.save(user);
-
-		List<Dict> dictList = DictUtil.dictCategoryList.get("性别");
-
-		return dictList;
-	}
 
 	@ResponseBody
 	@RequestMapping(value = "page")
-	public Page<User> page() {
-
-		Page<User> page = userService.getPage("", null, 1, 5);
-
-		return page;
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "json")
-	public JSONObject json() {
-
-		Page<User> page = userService.getPage("", null, 1, 5);
+	public JSONObject page(String param, String no, String size) {
+        
+		if(no==null||no.equals("")){
+			no = "1";
+		}
+		if(size==null||size.equals("")){
+			size="10";
+		}
+		
+	    int pageNo = Integer.valueOf(no);
+		int pageSize = Integer.valueOf(size);
+		Page<User> page = userService.getSqlPage(param, pageNo, pageSize);
 		JSONObject json = new JSONObject();
 		json.put("code", "0");
 		json.put("data", page);
 		return json;
 	}
+
 
 	@ResponseBody
 	@RequestMapping(value = "md5")
@@ -129,7 +108,7 @@ public class UserMngController {
 
 	public static void main(String[] args) {
 
-		String data = "123456";
+		String data = "1234567";
 		try {
 			MessageDigest md = MessageDigest.getInstance("md5");
 			byte[] md5 = md.digest(data.getBytes());
@@ -154,11 +133,22 @@ public class UserMngController {
 			String loginName, String password) {
 
 		User user = userService.findByLoginName(loginName);
+		String pwd;
 		JSONObject json = new JSONObject();
+		try {
+			pwd = ComUtil.toMd5Str(password);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			json.put("code", "101");
+			json.put("errmsg", "服务异常");
+			return json;
+		}
+
 		if (user == null) {
 			json.put("code", "1");
 			json.put("errmsg", "账号不存在");
-		} else if (!user.getPwd().equals(password)) {
+		} else if (!user.getPwd().equals(pwd)) {
 			json.put("code", "2");
 			json.put("errmsg", "密码错误");
 		} else {
@@ -218,7 +208,7 @@ public class UserMngController {
 		JSONObject json = new JSONObject();
 		List<Permi> permiList = new ArrayList<Permi>();
 		permiList = permiService.findByUser(user);
-	//	List<Permi> permiList = (List<Permi>) request.getSession().getAttribute("permis");
+//	    List<Permi> permiList = (List<Permi>) request.getSession().getAttribute("permis");
 //		for(Permi permi: permiList){
 //			System.out.println(permi.getPermiName());
 //		}
@@ -232,7 +222,8 @@ public class UserMngController {
 	
 	@ResponseBody
 	@RequestMapping(value = "has_menus")
-    public JSONObject hasMenus(HttpServletRequest request, HttpServletResponse response){
+    public JSONObject hasMenus(HttpServletRequest request, 
+    		HttpServletResponse response){
 		String token = request.getHeader("token");
 		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
 		User user = (User) userMap.get("user");
@@ -242,5 +233,87 @@ public class UserMngController {
 		json.put("data", menuMapList);
 		return json;
 	}
-    		
+	
+	
+	/**
+	 * 修改密码
+	 * @param request
+	 * @param response
+	 * @param orginPassword
+	 * @param newPassword
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "password_modify")
+    public JSONObject passwordModify(HttpServletRequest request, 
+    		HttpServletResponse response,
+    		String orginPassword, String newPassword){
+	  
+		String token = request.getHeader("token");
+		HashMap<String, Object> userMap = ComUtil.loginMap.get(token);	
+		User user = (User) userMap.get("user");
+		
+		String orginPwd;
+		String newPwd;
+		JSONObject json = new JSONObject();
+		try {
+			orginPwd = ComUtil.toMd5Str(orginPassword);
+			newPwd = ComUtil.toMd5Str(newPassword);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			json.put("code", "101");
+			json.put("data", "服务异常");
+			return json;
+		}
+		
+		if(orginPassword==null||newPassword==null){
+			json.put("code", "15");
+			json.put("errmsg", "密码获取失败");
+		}else if(!user.getPwd().equals(orginPwd)) {
+			json.put("code", "2");
+			json.put("errmsg", "密码错误");
+		}else{
+		
+			user.setPwd(newPwd);
+			userService.update(user);
+			userMap.put("user", user);
+			json.put("code", "0");
+			json.put("data", "");
+		}
+		return json;
+	}
+	
+	/**
+	 * 获取用户信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "get_user_info")
+    public JSONObject getUserInfo(HttpServletRequest request, 
+    		HttpServletResponse response){
+		String token = request.getHeader("token");
+		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+		User user = (User) userMap.get("user");
+	    Map<String, Object> map = userService.getUserInfo(user.getUserId());
+		JSONObject json = new JSONObject();
+		json.put("code", "0");
+		json.put("data", map);
+		return json;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "save")
+    public JSONObject save(User user){
+
+	
+	    userService.save(user);
+		JSONObject json = new JSONObject();
+		json.put("code", "0");
+		json.put("data", "");
+		return json;
+	}
+	
 }

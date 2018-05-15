@@ -19,7 +19,7 @@ public class Dict {
 	private String dictId;
 
 	@Column(name = "dict_no")
-	private String dictNo;
+	private Integer dictNo;
 
 	@Column(name = "dict_name")
 	private String dictName;
@@ -44,11 +44,13 @@ public class Dict {
 		this.dictId = dictId;
 	}
 
-	public String getDictNo() {
+
+
+	public Integer getDictNo() {
 		return dictNo;
 	}
 
-	public void setDictNo(String dictNo) {
+	public void setDictNo(Integer dictNo) {
 		this.dictNo = dictNo;
 	}
 
@@ -88,8 +90,9 @@ public class Dict {
 		return description;
 	}
 
-	public void setDictDescription(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
+
 
 }

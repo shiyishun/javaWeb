@@ -9,5 +9,7 @@ public interface RoleMngService {
 
 	public Serializable save(Role role);
 	
+	public List<Role> findExceptAdm();
+	
 	public List<Role> findAll();
 }

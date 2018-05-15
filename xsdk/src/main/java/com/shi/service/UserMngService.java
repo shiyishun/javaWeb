@@ -12,8 +12,15 @@ public interface UserMngService {
 	
 	public Serializable save(User user);
 	
-	public Page<User> getPage(String hql, Map<String, Object> params, int cunrrentPage,
+	public Page<User> getPage(String param, int pageNo,
+			int pageSize);
+	
+	public Page<User> getSqlPage(String param, int pageNo,
 			int pageSize);
 	
 	public User findByLoginName(String loginName);
+	
+	public void update(User user);
+	
+	public Map<String, Object> getUserInfo(String userId);
 }

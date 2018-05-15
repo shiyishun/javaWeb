@@ -35,32 +35,39 @@ public class DictMngController {
 	
 	private static Logger logger = LogManager.getLogger(DictMngController.class);
 	
-	/**
-	 * 根据字典类别名获取所属字典
-	 * @param cateName
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "getc")
-	public JSONObject getDictCateByName(String cateName) {
 
-		List<Dict> dictList = DictUtil.dictCategoryList.get(cateName);
-		String jsonText = JSON.toJSONString(dictList, false);
-		JSONArray jsonArray= JSONArray.parseArray(jsonText);
-		JSONObject json = new JSONObject();
-		json.put("code", "0");
-		json.put("data", jsonArray);
-		return json;
-	}
-	
-	
+
 	@ResponseBody
-	@RequestMapping(value = "add")
+	@RequestMapping(value = "save")
 	public JSONObject addDict(Dict dict) {
-		Serializable id = dictService.save(dict);
+		
+		
+		if(dict.getDictId()!=null&&!dict.getDictId().equals(""))
+		{  
+			// 更新
+			Dict dict_ = dictService.getById(dict.getDictId());
+			dict_.setDescription(dict.getDescription());
+			dict_.setDictValue(dict.getDictValue());
+			dictService.update(dict_);	
+		}else{
+			// 添加
+			if(dict.getParentId().trim().equals("")){
+				dict.setParentId(null);
+			}
+			if(dict.getDictCategory().equals("无")){
+				dict.setDictCategory(null);
+			}
+			dict.setDictNo(dictService.genNo(dict.getParentId()));
+			
+					
+			dictService.save(dict);
+			
+		}
+	
 		JSONObject json = new JSONObject();
 		json.put("code", "0");
-		json.put("data", id.toString());
+		json.put("data", null);
+		dictService.getCacheDict();
 		return json;
 	}
 	
@@ -71,11 +78,11 @@ public class DictMngController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "get")
-	public JSONObject getDictValueByName(String name) {
-		String value= DictUtil.dictMap.get(name);
+	public JSONObject getById(String dictId) {
+		Dict dict = dictService.getById(dictId);
 		JSONObject json = new JSONObject();
 		json.put("code", "0");
-		json.put("data", value);
+		json.put("data", dict);
 		return json;
 	}
 	
@@ -95,16 +102,58 @@ public class DictMngController {
 	}
 	
 	
+//	@ResponseBody
+//	@RequestMapping(value = "delete")
+//	public JSONObject delete() {
+//		List<Dict> dictList = dictService.delete(dict);
+//		JSONObject json = new JSONObject();
+//		json.put("code", "0");
+//		json.put("data", dictList);
+//		return json;
+//	}
+	/**
+	 * 查询缓存里的父字典
+	 * @param cateName
+	 * @return
+	 */
 	@ResponseBody
-	@RequestMapping(value = "delete")
-	public JSONObject delete() {
-		List<Dict> dictList = dictService.findParent();
+	@RequestMapping(value = "findpc")
+	public JSONObject findParentByCathe() {
+		List<Dict> dictList = dictService.findParentByCache();
 		JSONObject json = new JSONObject();
 		json.put("code", "0");
 		json.put("data", dictList);
 		return json;
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "findl")
+	public JSONObject findCategoryListByCathe(String params) {
+		JSONObject dataJson = new JSONObject();
+		if(params!=null){
+		String[] param = params.split(",");
 	
+		for(String str: param){
+			List<Dict> dictList = DictUtil.dictCategoryList.get(str);
+			dataJson.put(str, dictList);
+			}
+		}
+		JSONObject json = new JSONObject();
+		json.put("code", "0");
+		json.put("data", dataJson);
+		return json;
+	}
 	
-	
+	@ResponseBody
+	@RequestMapping(value = "test")
+	public JSONObject test() {
+
+
+	    int i = dictService.genNo(null);
+
+		JSONObject json = new JSONObject();
+		json.put("code", "0");
+		json.put("data", i);
+		return json;
+	}
 }

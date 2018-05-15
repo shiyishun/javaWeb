@@ -24,7 +24,7 @@ public class User {
     private String userId;
     
     @Column(name = "user_no")
-    private String userNo;
+    private Long userNo;
 
     @Column(name = "user_name")
     private String userName;
@@ -48,8 +48,9 @@ public class User {
     private Date lastLoginTime;
     
     @Column(name = "count")
-    private Integer count;
+    private Long count;
 
+    
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
     private Set<UserRoleRel> userRoleRelSet = new HashSet<UserRoleRel>();  
     
@@ -59,6 +60,10 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
     private Set<Mark> markSet = new HashSet<Mark>();
     
+    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
+    private TeachStu teachStu = new TeachStu();
+    
+    
 	public String getUserId() {
 		return userId;
 	}
@@ -67,11 +72,13 @@ public class User {
 		this.userId = userId;
 	}
 
-	public String getUserNo() {
+
+
+	public Long getUserNo() {
 		return userNo;
 	}
 
-	public void setUserNo(String userNo) {
+	public void setUserNo(Long userNo) {
 		this.userNo = userNo;
 	}
 
@@ -131,15 +138,16 @@ public class User {
 		this.lastLoginTime = lastLoginTime;
 	}
 
-	public Integer getCount() {
+
+    public Long getCount() {
 		return count;
 	}
 
-	public void setCount(Integer count) {
+	public void setCount(Long count) {
 		this.count = count;
 	}
 
-    @JsonIgnore
+	@JsonIgnore
 	public Set<UserRoleRel> getUserRoleRelSet() {
 		return userRoleRelSet;
 	}
@@ -165,6 +173,12 @@ public class User {
 		this.markSet = markSet;
 	}
 
+	public TeachStu getTeachStu() {
+		return teachStu;
+	}
 
- 
+	public void setTeachStu(TeachStu teachStu) {
+		this.teachStu = teachStu;
+	}
+
 }

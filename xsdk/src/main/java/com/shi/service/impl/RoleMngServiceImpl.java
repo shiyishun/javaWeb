@@ -25,6 +25,12 @@ public class RoleMngServiceImpl implements RoleMngService {
 	}
 	
 	@Override
+	public List<Role> findExceptAdm(){
+		String hql = " from Role where roleId!='0'";
+		return roleMngDao.findList(hql);
+	}
+	
+	@Override
 	public List<Role> findAll(){
 		
 		return roleMngDao.findAll();

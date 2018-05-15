@@ -29,7 +29,7 @@ public interface BaseDao<T, ID extends Serializable> {
 			SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException;
 
-	public T get(Serializable id);
+	public T getById(ID id);
 
 	public T get(String hql);
 
@@ -55,9 +55,12 @@ public interface BaseDao<T, ID extends Serializable> {
 
 	public List<T> findAll();
 	
-	public Page<T> getPage(String hql, Map<String, Object> params, int cunrrentPage,
+	public Page<T> getPage(String hql, Map<String, Object> params, int pageNo,
 			int pageSize);
 
+	public Page<T> getSqlPage(String sql, Map<String, Object> params, int pageNo,
+			int pageSize);
+	
 	public List<T> findList(String hql, Map<String, Object> params, int page,
 			int rows);
 

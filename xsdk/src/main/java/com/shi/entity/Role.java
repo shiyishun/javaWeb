@@ -86,6 +86,7 @@ public class Role {
 		this.createTime = createTime;
 	}
 
+    @JsonIgnore
 	public Set<UserRoleRel> getUserRoleRelSet() {
 		return userRoleRelSet;
 	}

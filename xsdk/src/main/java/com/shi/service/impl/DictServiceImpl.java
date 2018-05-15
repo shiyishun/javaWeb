@@ -32,7 +32,7 @@ public class DictServiceImpl implements DictService {
 	
 		for(Dict dict:DictList){
 			// 字典 名称-值对应map形式
-			DictUtil.dictMap.put(dict.getDictName(), dict.getDictValue());
+			DictUtil.dictMap.put(dict.getDictName(), dict);
 			// 字典类别
 			if(dict.getDictCategory()!=null){  				
 				List<Dict> DictList_ = new ArrayList<Dict>();
@@ -57,13 +57,62 @@ public class DictServiceImpl implements DictService {
 	public List<Dict> findParent(){
 		List<Dict> DictList = new ArrayList<Dict>();
 		DictList = dictDao.findList(" from Dict d where d.parentId = null order by d.dictNo asc");
-		return DictList;
-		
+		return DictList;		
 	}
 
+	public List<Dict> findParentByCache(){
+		List<Dict> DictList = new ArrayList<Dict>();
+		for (Dict dict : DictUtil.dictMap.values()) { 
+		  if(dict.getParentId()==null){
+			  DictList.add(dict);  
+		  }
+	    }
+		return DictList;
+	}
+	
 	public void delete(Dict dict){
 		
 		dictDao.delete(dict);
 	}
 	
+	public Dict getById(String dictId){
+		
+		return dictDao.getById(dictId);
+	}
+	
+	
+	public void update(Dict dict){
+		
+		dictDao.update(dict);
+	}
+	
+	/**
+	 * 生成字典编号规则
+	 */
+	public int genNo(String parentId){
+		StringBuffer sql = new StringBuffer("select max(dict_no) as no from tb_dict");
+		int result = 0;
+		List<Map<String, Object>> reslutList = new ArrayList<Map<String, Object>>();
+		// 父类
+		if(parentId==null){
+			sql.append(" where parent_id is null");
+			reslutList = dictDao.findListBySql(sql.toString());
+			if(reslutList.get(0)!=null){
+				result = (Integer)reslutList.get(0).get("no")+100;
+			}else{// 数据表为空
+				result = 100;				
+			}
+	    // 父类及子类
+		}else{
+			sql.append(" where dict_id='"+ parentId+"' or parent_id = '"+ parentId+"'");
+			reslutList = dictDao.findListBySql(sql.toString());
+			if(reslutList.get(0)!=null){
+			  result = (Integer)reslutList.get(0).get("no")+1;
+			}else{ // parentId值错误
+				result = 0;
+			}
+		}
+		return result;
+
+	}
 }

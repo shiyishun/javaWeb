@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -140,7 +141,7 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		this.executeHql(hqlString);
 	}
 
-	public T get(Serializable id) {
+	public T getById (ID id) {
 		return (T) this.getCurrentSession().get(this.clazz, id);
 	}
 
@@ -169,7 +170,7 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	 * @param id
 	 */
 	public void delete(ID id) {
-		this.getCurrentSession().delete(get(id));
+		this.getCurrentSession().delete(getById(id));
 	}
 
 	/**
@@ -258,27 +259,27 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 
 	/**
 	 * 返回分页
-	 * hql 查询条件语句 以where开头
+	 * hql 查询条件语句
 	 * params 查询参数
 	 * currentPage 当前页码
 	 * pageSize 页面记录条数
 	 */
 	@Override
-	public Page<T> getPage(String hql, Map<String, Object> params, int cunrrentPage,
+	public Page<T> getPage(String hql, Map<String, Object> params, int pageNo,
 			int pageSize){
 		
 		Page<T> page = new Page<T>();
-		page.setCunrrentPage(cunrrentPage);
+		page.setCunrrentPage(pageNo);
 		page.setPageSize(pageSize);
 	    // 返回分页查询记录
-		String serachHql = "from " + this.clazz.getName() + hql;
-		Query q1 = this.getCurrentSession().createQuery(serachHql);
+		Query q1 = this.getCurrentSession().createQuery(hql);
 		this.setParameterToQuery(q1, params);
 	    List<T> tList =  q1.setFirstResult((page.getCunrrentPage() - 1) * page.getPageSize())
 	    		.setMaxResults(page.getPageSize()).list();
 	    page.setList(tList);
-		// 返回查询总数 
-	    String countHql="select count(*) from "+ this.clazz.getName() + hql;
+	    String fromHql = hql.substring(hql.indexOf("from"));
+		// 返回查询总数  
+	    String countHql="select count(*) "+ fromHql;
 	    Query q2 = this.getCurrentSession().createQuery(countHql);
 		this.setParameterToQuery(q2, params);
 		page.setTotalCount((long) q2.uniqueResult());
@@ -286,7 +287,35 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		
 	}
 	
-	
+	/**
+	 * 返回分页
+	 * sql 查询条件语句
+	 * params 查询参数
+	 * currentPage 当前页码
+	 * pageSize 页面记录条数
+	 */
+	@Override
+	public Page<T> getSqlPage(String sql, Map<String, Object> params, int pageNo,
+			int pageSize){
+		
+		Page<T> page = new Page<T>();
+		page.setCunrrentPage(pageNo);
+		page.setPageSize(pageSize);
+	    // 返回分页查询记录
+		Query q1 = this.getCurrentSession().createSQLQuery(sql);
+		this.setParameterToQuery(q1, params);
+	    List<T> tList =  q1.setFirstResult((page.getCunrrentPage() - 1) * page.getPageSize())
+	    		.setMaxResults(page.getPageSize()).list();
+	    page.setList(tList);
+	    String fromSql = sql.substring(sql.indexOf("from"));
+		// 返回查询总数  
+	    String countHql="select count(*) "+ fromSql;
+	    Query q2 = this.getCurrentSession().createSQLQuery(countHql);
+		this.setParameterToQuery(q2, params);
+		page.setTotalCount(((BigInteger)q2.uniqueResult()).longValue());
+	    return page;
+		
+	}
 	
 	/**
 	 * 

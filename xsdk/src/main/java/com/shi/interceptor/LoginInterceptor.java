@@ -57,34 +57,34 @@ public class LoginInterceptor implements HandlerInterceptor {
 		// return true;
 		// }
 
-		JSONObject data = new JSONObject();
-		String token = request.getHeader("token");
-		if (token == null) {
-			data.put("code", "100");
-			data.put("errmsg", "未获得认证");
-			RespJsonUtils.json(response, data);
-			return false;		
-		}
-		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
-		if (userMap == null) {
-			data.put("code", "100");
-			data.put("errmsg", "用户未登陆");
-			RespJsonUtils.json(response, data);
-			return false;
-		}
-		Date timestampe = (Date) userMap.get("timestamp");
-		Date newDate = new Date();
-		long diff =  newDate.getTime() - timestampe.getTime();
-	 
-		if(diff>15*60*1000){
-			data.put("code", "101");
-			data.put("errmsg", "用户登陆超时");
-			userMap.remove(token);
-			RespJsonUtils.json(response, data);
-			return false;		
-		} 
-	    // 更新失效时间
-	   userMap.put("timestamp", new Date());
+//		JSONObject data = new JSONObject();
+//		String token = request.getHeader("token");
+//		if (token == null) {
+//			data.put("code", "100");
+//			data.put("errmsg", "未获得认证");
+//			RespJsonUtils.json(response, data);
+//			return false;		
+//		}
+//		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+//		if (userMap == null) {
+//			data.put("code", "100");
+//			data.put("errmsg", "用户未登陆");
+//			RespJsonUtils.json(response, data);
+//			return false;
+//		}
+//		Date timestampe = (Date) userMap.get("timestamp");
+//		Date newDate = new Date();
+//		long diff =  newDate.getTime() - timestampe.getTime();
+//	 
+//		if(diff>30*60*1000){
+//			data.put("code", "101");
+//			data.put("errmsg", "用户登陆超时，请重新登陆");
+//			userMap.remove(token);
+//			RespJsonUtils.json(response, data);
+//			return false;		
+//		} 
+//	    // 更新失效时间
+//	   userMap.put("timestamp", new Date());
        return true;
 	}
 

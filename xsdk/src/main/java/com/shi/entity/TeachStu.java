@@ -37,14 +37,8 @@ public class TeachStu {
 	@Column(name="birthday")
 	private Date birthday;
 	
-	@Column(name="school")
-	private String school;
-	
 	@Column(name="grade")
 	private String grade;
-	
-	@Column(name="institute")
-	private String institute;
 	
 	@Column(name="major")
 	private String major;
@@ -59,6 +53,11 @@ public class TeachStu {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "school_info_id")
+	private SchoolInfo schoolInfo;
+	
+	
 	public String getTeachStuId() {
 		return teachStuId;
 	}
@@ -100,28 +99,12 @@ public class TeachStu {
 		this.birthday = birthday;
 	}
 
-	public String getSchool() {
-		return school;
-	}
-
-	public void setSchool(String school) {
-		this.school = school;
-	}
-
 	public String getGrade() {
 		return grade;
 	}
 
 	public void setGrade(String grade) {
 		this.grade = grade;
-	}
-
-	public String getInstitute() {
-		return institute;
-	}
-
-	public void setInstitute(String institute) {
-		this.institute = institute;
 	}
 
 	public String getMajor() {
@@ -154,8 +137,14 @@ public class TeachStu {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public SchoolInfo getSchoolInfo() {
+		return schoolInfo;
+	}
+
+	public void setSchoolInfo(SchoolInfo schoolInfo) {
+		this.schoolInfo = schoolInfo;
 	} 
-	
-	
 	
 }
