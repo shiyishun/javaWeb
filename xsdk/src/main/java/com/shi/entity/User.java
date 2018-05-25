@@ -50,6 +50,9 @@ public class User {
     @Column(name = "count")
     private Long count;
 
+    @Column(name ="status")
+    private int status;
+    
     
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")  
     private Set<UserRoleRel> userRoleRelSet = new HashSet<UserRoleRel>();  
@@ -147,6 +150,16 @@ public class User {
 		this.count = count;
 	}
 
+	
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	@JsonIgnore
 	public Set<UserRoleRel> getUserRoleRelSet() {
 		return userRoleRelSet;
@@ -164,11 +177,13 @@ public class User {
 	public void setUserCourseRelSet(Set<UserCourseRel> userCourseRelSet) {
 		this.userCourseRelSet = userCourseRelSet;
 	}
-
+   
+	@JsonIgnore
 	public Set<Mark> getMarkSet() {
 		return markSet;
 	}
 
+	@JsonIgnore
 	public void setMarkSet(Set<Mark> markSet) {
 		this.markSet = markSet;
 	}

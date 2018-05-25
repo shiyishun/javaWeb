@@ -23,4 +23,6 @@ public interface UserMngService {
 	public void update(User user);
 	
 	public Map<String, Object> getUserInfo(String userId);
+	
+	public User getById(String id);
 }

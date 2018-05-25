@@ -39,7 +39,7 @@ public class ComUtil {
 		
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
-		String No = "no"+df.format(new Date())+((Math.random()*9+1)*1000);
+		String No = df.format(new Date())+((int)(Math.random()*9+1)*1000);
 		return No;
 	
 	}

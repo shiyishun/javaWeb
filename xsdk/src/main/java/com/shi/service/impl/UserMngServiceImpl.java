@@ -1,13 +1,17 @@
 package com.shi.service.impl;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 
 import com.shi.common.DictUtil;
 import com.shi.common.Page;
@@ -40,7 +44,7 @@ public class UserMngServiceImpl implements UserMngService {
 	@Override
 	public Page<User> getSqlPage(String param,
 			int pageNo, int pageSize) {
-		StringBuffer sql = new StringBuffer("select u.user_no, u.user_name, u.phone, r.role_name, u.user_id " +
+		StringBuffer sql = new StringBuffer("select u.user_no, u.user_name, u.phone, r.role_name, u.user_id, u.status " +
 				" from tb_user u left join tb_user_role_rel urr on u.user_id=urr.user_id " +
 				" left join tb_role r on urr.role_id=r.role_id ");
 		
@@ -51,7 +55,13 @@ public class UserMngServiceImpl implements UserMngService {
 			params.put("userName", "%"+param+"%");	
 		}
 		sql.append(" order by u.user_no asc");
-		return userMngDao.getSqlPage(sql.toString(), params, pageNo, pageSize);
+		Page<User> p =  userMngDao.getSqlPage(sql.toString(), params, pageNo, pageSize);
+		List l=  p.getList();
+		for(int i=0; i<l.size(); i++){
+			Object[] obj = (Object[]) l.get(i);	
+			 obj[5]= DictUtil.getKeyByValue("用户状态", obj[5].toString());
+		}
+		return p;
 	}
 
 	@Override
@@ -86,49 +96,92 @@ public class UserMngServiceImpl implements UserMngService {
 	public Map<String, Object> getUserInfo(String userId) {
 
 		User user = userMngDao.getById(userId);
+		if(user==null){
+			return null;
+		}
+		
 		Set<UserRoleRel> urrs = user.getUserRoleRelSet();
 		String userName = user.getUserName();
+		String userNo = user.getUserNo().toString();
 		String phone = user.getPhone()!=null?user.getPhone():"";
 		String email = user.getEmail()!=null?user.getEmail():"";
+		String status = String.valueOf(user.getStatus());
 		String gender = "";
+		String genderName = "";
 		String name = "";
 		String no = "";
 		String school = "";
 		String colleage = "";
 		String department = "";
+		String birthday = "";
+		String major = "";
+		String grade = "";
+		String classNo = "";
+		String schoolInfoId = "";
+	
 		TeachStu teachStu = user.getTeachStu();
 		if (teachStu != null) {
-			gender = DictUtil.getKeyByValue(DictUtil.dictCategoryMap.get("性别"),
-					teachStu.getGender());
+			genderName = DictUtil.getKeyByValue("性别",
+					teachStu.getGender().toString());
+			gender = teachStu.getGender().toString();
 			name = teachStu.getName();
 			no = teachStu.getNo();
+			if(teachStu.getBirthday()!=null){
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
+				birthday = sdf.format(teachStu.getBirthday()); 	
+			}
+			major = teachStu.getMajor();
+			classNo = DictUtil.getKeyByValue("班级",
+						teachStu.getClassNo());
+			grade = teachStu.getGrade();		
 			SchoolInfo schoolInfo = teachStu.getSchoolInfo();
 			if (schoolInfo != null) {
+				schoolInfoId = teachStu.getSchoolInfo().getSchoolInfoId();
 				school = schoolInfo.getSchool();
 				colleage = schoolInfo.getCollege();
 				department = schoolInfo.getDepartment();
 			}
 		}
 
-		StringBuffer roles = new StringBuffer();
-		for (UserRoleRel urr : urrs) {
-			roles.append(urr.getRole().getRoleName() + ",");
+		StringBuffer roleNames = new StringBuffer();
+		StringBuffer roleIds = new StringBuffer();
+		if(urrs.size()>0){
+		  for (UserRoleRel urr : urrs) {
+			 roleNames.append(urr.getRole().getRoleName() + ",");
+			 roleIds.append(urr.getRole().getRoleId() + ",");
+		   }
+		   roleNames.delete(roleNames.length() - 1, roleNames.length());
+		   roleIds.delete(roleIds.length() - 1, roleIds.length());
 		}
-		roles.delete(roles.length() - 1, roles.length());
-
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("userNo", userNo);
 		map.put("userName", userName);
 		map.put("phone", phone);
 		map.put("email", email);
-		map.put("roles", roles.toString());
+		map.put("status", status);
+		map.put("roleNames", roleNames.toString());
+		map.put("roleIds", roleIds.toString());
 		map.put("gender", gender);
+		map.put("genderName", genderName);
 		map.put("name", name);
 		map.put("no", no);
 		map.put("school", school);
 		map.put("colleage", colleage);
 		map.put("department", department);
+		map.put("birthday", birthday);
+		map.put("major", major);
+		map.put("grade", grade);
+		map.put("schoolInfoId", schoolInfoId);
+		map.put("classNo", classNo);
 
 		return map;
 	}
 
+	
+	public User getById(String id) {
+		return userMngDao.getById(id);
+	}
+	
 }

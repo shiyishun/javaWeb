@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.shi.common.DictUtil;
+import com.shi.common.Page;
 import com.shi.dao.DictDao;
 import com.shi.entity.Dict;
 import com.shi.service.DictService;
@@ -115,4 +116,22 @@ public class DictServiceImpl implements DictService {
 		return result;
 
 	}
+	
+	public Page<Dict> getPage(String param, int pageNo,
+			int pageSize){
+		
+		StringBuffer hql = new StringBuffer("from Dict d");
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(param!=null&&!param.trim().equals("")){
+			hql.append(" where d.dictName like:dictName or d.dictCategory like:dictCategory");
+			params.put("dictName", "%"+param+"%");
+			params.put("dictCategory", "%"+param+"%");	
+		}
+		hql.append(" order by d.dictNo asc");
+		return dictDao.getPage(hql.toString(), params, pageNo, pageSize);
+		
+	}
+
+	
+	
 }

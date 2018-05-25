@@ -21,33 +21,24 @@ public class CourseTime {
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	private String courseTimeId;
 
-
-	@Column(name="course_time_no")
-	private String coursetimeNo;
-	
 	@Column(name="week")
 	private int week;
 	
-	@Column(name="start_time")
-	private Date startTime;
+	@Column(name="start_period")
+	private int startPeriod;
 	
-	@Column(name="end_time")
-	private Date endTime;
+	@Column(name="end_period")
+	private int endPeriod;
 
+	@Column(name = "class_location")
+	private String classLocation;
+	
 	public String getCourseTimeId() {
 		return courseTimeId;
 	}
 
 	public void setCourseTimeId(String courseTimeId) {
 		this.courseTimeId = courseTimeId;
-	}
-
-	public String getCoursetimeNo() {
-		return coursetimeNo;
-	}
-
-	public void setCoursetimeNo(String coursetimeNo) {
-		this.coursetimeNo = coursetimeNo;
 	}
 
 	public int getWeek() {
@@ -58,21 +49,28 @@ public class CourseTime {
 		this.week = week;
 	}
 
-	public Date getStartTime() {
-		return startTime;
+	public int getStartPeriod() {
+		return startPeriod;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public void setStartPeriod(int startPeriod) {
+		this.startPeriod = startPeriod;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public int getEndPeriod() {
+		return endPeriod;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setEndPeriod(int endPeriod) {
+		this.endPeriod = endPeriod;
 	}
-	
-	
+
+	public String getClassLocation() {
+		return classLocation;
+	}
+
+	public void setClassLocation(String classLocation) {
+		this.classLocation = classLocation;
+	}
+
 }

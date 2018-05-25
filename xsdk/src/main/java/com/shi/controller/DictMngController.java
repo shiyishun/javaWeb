@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.shi.common.DictUtil;
+import com.shi.common.Page;
 import com.shi.entity.Dict;
 import com.shi.entity.Role;
 import com.shi.entity.User;
@@ -143,6 +144,38 @@ public class DictMngController {
 		json.put("data", dataJson);
 		return json;
 	}
+	
+	
+	
+    /**
+     * 分页查询
+     * @param param 查询参数
+     * @param no 页码
+     * @param size 页记录条数
+     * @return
+     */
+	@ResponseBody
+	@RequestMapping(value = "page")
+	public JSONObject page(String param, String no, String size) {
+        
+		if(no==null||no.equals("")){
+			no = "1";
+		}
+		if(size==null||size.equals("")){
+			size="10";
+		}
+		
+	    int pageNo = Integer.valueOf(no);
+		int pageSize = Integer.valueOf(size);
+		Page<Dict> page = dictService.getPage(param, pageNo, pageSize);
+		JSONObject json = new JSONObject();
+		json.put("code", "0");
+		json.put("data", page);
+		return json;
+	}
+
+	
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "test")

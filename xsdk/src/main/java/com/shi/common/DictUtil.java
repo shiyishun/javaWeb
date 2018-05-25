@@ -22,24 +22,15 @@ public class DictUtil {
 	 */
 	public static Map<String, List<Dict>> dictCategoryList = new HashMap<String, List<Dict>>();
 
-	/**
-	 * 根据字典分类存储所在的数据字典Map
-	 */
-	public static Map<String, HashMap<String, Object>> dictCategoryMap = new HashMap<String, HashMap<String, Object>>();
 
-	/**
-	 * 通过value查找key
-	 * @param map
-	 * @param value
-	 * @return
-	 */
-	public static String getKeyByValue(HashMap<String, Object> map, Object value) {
-
+	public static String getKeyByValue(String category, String value) {
+         
 		String key = "";
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			Object obj = entry.getValue();
-			if (obj != null && obj.equals(value)) {
-				key = (String) entry.getKey();
+		List<Dict> dictList = dictCategoryList.get(category);
+		for(Dict dict: dictList){
+			if(dict.getDictValue()!=null&&dict.getDictValue().equals(value)){
+			key = dict.getDictName();
+			break;
 			}
 		}
 		return key;

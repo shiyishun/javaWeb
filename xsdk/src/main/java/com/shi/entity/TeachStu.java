@@ -36,7 +36,7 @@ public class TeachStu {
 	
 	@Column(name="birthday")
 	private Date birthday;
-	
+
 	@Column(name="grade")
 	private String grade;
 	

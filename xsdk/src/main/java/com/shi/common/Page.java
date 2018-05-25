@@ -66,8 +66,8 @@ public class Page<T>
   
     public void setPageSize(int pageSize)  
     {  
-        if(pageSize<10){  
-            pageSize=10;  
+        if(pageSize<0){  
+            pageSize=1;  
         }  
         this.pageSize = pageSize;  
     }  

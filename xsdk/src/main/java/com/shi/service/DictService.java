@@ -3,7 +3,9 @@ package com.shi.service;
 import java.io.Serializable;
 import java.util.List;
 
+import com.shi.common.Page;
 import com.shi.entity.Dict;
+import com.shi.entity.User;
 
 public interface DictService {
 
@@ -24,4 +26,8 @@ public interface DictService {
 	public void update(Dict dict);
 	
 	public int genNo(String parentId);
+	
+	public Page<Dict> getPage(String param, int pageNo,
+			int pageSize);
+	
 }

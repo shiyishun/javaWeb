@@ -14,6 +14,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_school_info")
 public class SchoolInfo {
@@ -52,7 +54,7 @@ public class SchoolInfo {
 		return schoolNo;
 	}
 
-	public void setSchoolNO(String schoolNo) {
+	public void setSchoolNo(String schoolNo) {
 		this.schoolNo = schoolNo;
 	}
 
@@ -79,7 +81,8 @@ public class SchoolInfo {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
-
+    
+	@JsonIgnore
 	public Set<TeachStu> getTeachStu() {
 		return teachStu;
 	}

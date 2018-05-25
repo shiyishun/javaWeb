@@ -34,14 +34,17 @@ public class CallTheroll {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@Column(name="stu_no")
+	private String stuNo;
+	
 	@Column(name="stu_name")
 	private String stuName;
 	
 	@Column(name="call_state")
 	private int callState;
 	
-	@Column(name="call_time")
-	private Date callTime;
+	@Column(name="call_date")
+	private Date callDate;
 	
 	@Column(name="call_position")
 	private String callPosition;
@@ -78,6 +81,15 @@ public class CallTheroll {
 		this.user = user;
 	}
 
+
+	public String getStuNo() {
+		return stuNo;
+	}
+
+	public void setStuNo(String stuNo) {
+		this.stuNo = stuNo;
+	}
+
 	public String getStuName() {
 		return stuName;
 	}
@@ -93,13 +105,13 @@ public class CallTheroll {
 	public void setCallState(int callState) {
 		this.callState = callState;
 	}
-
-	public Date getCallTime() {
-		return callTime;
+	
+	public Date getCallDate() {
+		return callDate;
 	}
 
-	public void setCallTime(Date callTime) {
-		this.callTime = callTime;
+	public void setCallDate(Date callDate) {
+		this.callDate = callDate;
 	}
 
 	public String getCallPosition() {

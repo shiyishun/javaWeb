@@ -1,14 +1,17 @@
 package com.shi.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shi.common.Page;
 import com.shi.dao.PermiDao;
 import com.shi.entity.Permi;
 import com.shi.entity.Role;
@@ -75,6 +78,21 @@ public class PermiServiceImpl implements PermiService {
 			}
 		}
 		return allPermiList;
+	}
+	
+	public Page<Permi> getPage(String param, String roleId, int pageNo,
+			int pageSize){
+		
+		StringBuffer hql = new StringBuffer("select p from RolePermiRel rpr, " +
+				" Permi p where rpr.permi.permiId = p.permiId" +
+				" and rpr.role.roleId =:roleId");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("roleId", roleId);
+		if(param!=null&&!param.trim().equals("")){
+			hql.append(" and p.permiName like:permiName");
+			params.put("permiName", "%"+param+"%");
+		}
+		return permiDao.getPage(hql.toString(), params, pageNo, pageSize);
 	}
 	
 }

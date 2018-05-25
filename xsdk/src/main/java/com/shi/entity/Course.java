@@ -1,6 +1,9 @@
 package com.shi.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,62 +14,69 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_course")
 public class Course {
-	
+
 	@Id
 	@Column(name = "course_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	private String courseId;
 
-	@Column(name="course_no")
+	@Column(name = "course_no")
 	private String courseNo;
-	
-	@Column(name="course_name")
-	private String courseName;
-	
-	@Column(name="description")
-	private String description;
-	
-	@Column(name="term")
-	private String term;
-	
-	@Column(name="class_location")
-	private String classLocation;
-	
-	@Column(name="class_date")
-	private String classDate;
-	
-	@Column(name="class_order")
-	private String classOrder;
-		
-	@Column(name="daily_weight")
-	private Double dailyWeight;
-	
-	@Column(name="final_weight")
-	private Double finalWeight;
-	
-	@Column(name="picket_line")
-	private Integer picketLine;
 
+	@Column(name = "course_name")
+	private String courseName;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "term")
+	private String term;
+
+	@Column(name = "class_date")
+	private String classDate;
+
+	@Column(name = "class_order")
+	private String classOrder;
+
+	@Column(name = "daily_weight")
+	private Double dailyWeight;
+
+	@Column(name = "final_weight")
+	private Double finalWeight;
+
+	@Column(name = "picket_line")
+	private Integer picketLine;
+	
+	@JSONField(serialize = false)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
-	private Set<UserCourseRel> userCourseRelSet = new HashSet<UserCourseRel>();  
+	private Set<UserCourseRel> userCourseRelSet = new HashSet<UserCourseRel>();
+
+	@JSONField(serialize = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
+	private Set<CourseTimeRel> courseTimeRelSet = new HashSet<CourseTimeRel>();
+
+	@JSONField(serialize = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
+	private Set<CallTheroll> callTheroll = new HashSet<CallTheroll>();
+
+	@JSONField(serialize = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
+	private Set<Mark> mark = new HashSet<Mark>();
+
+	@Transient
+	private List<Map<String, Object>> classInfoMapList = new ArrayList<Map<String, Object>>(); 
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")  
-	private Set<CourseTimeRel> courseTimeRelSet = new HashSet<CourseTimeRel>();  
-	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")  
-	private Set<CallTheroll> callTheroll = new HashSet<CallTheroll>();  
-	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")  
-	private Set<Mark> mark = new HashSet<Mark>();  
 	
 	public String getCourseId() {
 		return courseId;
@@ -106,14 +116,6 @@ public class Course {
 
 	public void setTerm(String term) {
 		this.term = term;
-	}
-
-	public String getClassLocation() {
-		return classLocation;
-	}
-
-	public void setClassLocation(String classLocation) {
-		this.classLocation = classLocation;
 	}
 
 	public String getClassDate() {
@@ -156,7 +158,8 @@ public class Course {
 		this.picketLine = picketLine;
 	}
 
-    @JsonIgnore
+
+
 	public Set<UserCourseRel> getUserCourseRelSet() {
 		return userCourseRelSet;
 	}
@@ -165,7 +168,8 @@ public class Course {
 		this.userCourseRelSet = userCourseRelSet;
 	}
 
-	@JsonIgnore
+
+
 	public Set<CourseTimeRel> getCourseTimeRelSet() {
 		return courseTimeRelSet;
 	}
@@ -174,7 +178,8 @@ public class Course {
 		this.courseTimeRelSet = courseTimeRelSet;
 	}
 
-	@JsonIgnore
+
+
 	public Set<CallTheroll> getCallTheroll() {
 		return callTheroll;
 	}
@@ -183,7 +188,8 @@ public class Course {
 		this.callTheroll = callTheroll;
 	}
 
-	@JsonIgnore
+
+
 	public Set<Mark> getMark() {
 		return mark;
 	}
@@ -191,5 +197,15 @@ public class Course {
 	public void setMark(Set<Mark> mark) {
 		this.mark = mark;
 	}
+
+	public List<Map<String, Object>> getClassInfoMapList() {
+		return classInfoMapList;
+	}
+
+	public void setClassInfoMapList(List<Map<String, Object>> classInfoMapList) {
+		this.classInfoMapList = classInfoMapList;
+	}
+
+	
 	
 }
