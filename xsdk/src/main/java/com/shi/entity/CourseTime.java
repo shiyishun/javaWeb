@@ -1,14 +1,22 @@
 package com.shi.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -32,6 +40,14 @@ public class CourseTime {
 
 	@Column(name = "class_location")
 	private String classLocation;
+	
+	@Column(name = "class_shape")
+	private String classShape;
+	
+	@JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courseTime")  
+    private CourseTimeRel courseTimeRel = new CourseTimeRel();  
+	
 	
 	public String getCourseTimeId() {
 		return courseTimeId;
@@ -71,6 +87,22 @@ public class CourseTime {
 
 	public void setClassLocation(String classLocation) {
 		this.classLocation = classLocation;
+	}
+
+	public String getClassShape() {
+		return classShape;
+	}
+
+	public void setClassShape(String classShape) {
+		this.classShape = classShape;
+	}
+
+	public CourseTimeRel getCourseTimeRel() {
+		return courseTimeRel;
+	}
+
+	public void setCourseTimeRel(CourseTimeRel courseTimeRel) {
+		this.courseTimeRel = courseTimeRel;
 	}
 
 }

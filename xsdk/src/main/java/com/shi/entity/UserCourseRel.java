@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "tb_user_course_rel")
@@ -39,6 +41,7 @@ public class UserCourseRel {
 		this.userCourseRelId = userCourseRelId;
 	}
 
+	@JsonIgnore
 	public User getUser() {
 		return user;
 	}
@@ -47,6 +50,7 @@ public class UserCourseRel {
 		this.user = user;
 	}
 
+	@JsonIgnore
 	public Course getCourse() {
 		return course;
 	}

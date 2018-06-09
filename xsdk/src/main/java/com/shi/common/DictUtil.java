@@ -23,6 +23,28 @@ public class DictUtil {
 	public static Map<String, List<Dict>> dictCategoryList = new HashMap<String, List<Dict>>();
 
 
+	/**
+	 * 根据类别名称查询子字典，并返回以dictValue为key，dictName为value形式
+	 * @param category
+	 * @return
+	 */
+	public static Map<String, String> dictKeyValue(String category){
+		
+		Map<String, String> map = new HashMap<String, String>();
+		List<Dict> dictList = dictCategoryList.get(category);
+		for(Dict dict: dictList){
+			map.put(dict.getDictValue(), dict.getDictName());
+		}
+		return map;
+	}
+	
+	
+	/**
+	 * 根据value获取key
+	 * @param category
+	 * @param value
+	 * @return
+	 */
 	public static String getKeyByValue(String category, String value) {
          
 		String key = "";

@@ -1,5 +1,7 @@
 package com.shi.app;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,18 +28,22 @@ import com.shi.entity.Course;
 import com.shi.entity.TeachStu;
 import com.shi.entity.User;
 import com.shi.entity.UserCourseRel;
+import com.shi.service.CallTherollService;
 import com.shi.service.CourseService;
 import com.shi.service.UserMngService;
 
 
 @Controller
-@RequestMapping(value = "app/")
+@RequestMapping(value = "app/teacher/")
 public class TeacherApp {
    
 	@Autowired
 	private UserMngService userService;
 	@Autowired
 	private CourseService courseService;
+	@Autowired
+	private CallTherollService callTherollService;
+	
 	
 	/**
 	 * 通过用户ID获取所有课程
@@ -69,7 +75,13 @@ public class TeacherApp {
 	}
 	
 	
-	
+	/**
+	 * 根据课程ID生成签到表
+	 * @param request
+	 * @param response
+	 * @param courseId
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "create_signin")
     public JSONObject createSignin(HttpServletRequest request, 
@@ -83,16 +95,17 @@ public class TeacherApp {
 		while (it.hasNext()) {  
 			UserCourseRel ucr = it.next();  
 		    TeachStu ts = ucr.getUser().getTeachStu();
-		    if("1".equals(ts.getIsTecacher())){
+		    if(1==ts.getIsTecacher()){
 		    	CallTheroll callTheroll = new CallTheroll();
 		    	callTheroll.setCallDate(new Date());
 		    	callTheroll.setCallPosition("0*0");
 		    	callTheroll.setCallState(0);
 		    	callTheroll.setCourse(course);
+		    	callTheroll.setStuName(ts.getName());
 		    	callTheroll.setCourseName(course.getCourseName());
 		    	callTheroll.setStuNo(ts.getNo());
 		    	callTheroll.setUser(ucr.getUser());
-		    	
+		    	callTherollService.save(callTheroll);
 		    }
 		   
 		}
@@ -103,6 +116,42 @@ public class TeacherApp {
 	}
 	
 	
+	
+	/**
+	 * 通过课程ID与时间获取签到表
+	 * @param request
+	 * @param response
+	 * @param userId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "find_call_theroll")
+    public JSONObject findCourse(HttpServletRequest request, 
+    		HttpServletResponse response, String courseId, String date){
+		
+		
+		JSONObject json = new JSONObject();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date startCallDate = null;
+		Date endCallDate = null;
+		try {
+			endCallDate = sdf.parse(date+" 23:59:59");
+			startCallDate = sdf.parse(date+" 00:00:00");
+		} catch (ParseException e) {
+			json.put("code", "123");
+			json.put("errmsg", "时间格式错误");
+			e.printStackTrace();
+			return json;
+			
+		}
+	
+        List<CallTheroll> callTheroll = callTherollService.findByCouserIdAndDate(courseId, startCallDate, endCallDate);
+		String jsonText = JSON.toJSONString(callTheroll, false);
+		JSONArray jsonArray= JSONArray.parseArray(jsonText);
+		json.put("code", "0");
+		json.put("data", jsonArray);
+		return json;
+	}
 	
 	
 	

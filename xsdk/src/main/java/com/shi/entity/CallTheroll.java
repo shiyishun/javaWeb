@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 @Entity
 @Table(name = "tb_call_theroll")
 public class CallTheroll {
@@ -23,6 +25,7 @@ public class CallTheroll {
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	private String callTherollId;
 
+	@JSONField(serialize = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id")
 	private Course course;
@@ -30,6 +33,7 @@ public class CallTheroll {
 	@Column(name="course_name")
 	private String courseName;
 	
+	@JSONField(serialize = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;

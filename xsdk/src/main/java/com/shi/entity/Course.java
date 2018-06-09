@@ -58,17 +58,21 @@ public class Course {
 	@Column(name = "picket_line")
 	private Integer picketLine;
 	
+
 	@JSONField(serialize = false)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
 	private Set<UserCourseRel> userCourseRelSet = new HashSet<UserCourseRel>();
+
 
 	@JSONField(serialize = false)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
 	private Set<CourseTimeRel> courseTimeRelSet = new HashSet<CourseTimeRel>();
 
+
 	@JSONField(serialize = false)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
 	private Set<CallTheroll> callTheroll = new HashSet<CallTheroll>();
+
 
 	@JSONField(serialize = false)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
@@ -159,17 +163,18 @@ public class Course {
 	}
 
 
-
+	@JsonIgnore
 	public Set<UserCourseRel> getUserCourseRelSet() {
 		return userCourseRelSet;
 	}
 
+	
 	public void setUserCourseRelSet(Set<UserCourseRel> userCourseRelSet) {
 		this.userCourseRelSet = userCourseRelSet;
 	}
 
 
-
+	@JsonIgnore
 	public Set<CourseTimeRel> getCourseTimeRelSet() {
 		return courseTimeRelSet;
 	}
@@ -179,7 +184,7 @@ public class Course {
 	}
 
 
-
+	@JsonIgnore
 	public Set<CallTheroll> getCallTheroll() {
 		return callTheroll;
 	}
@@ -189,7 +194,7 @@ public class Course {
 	}
 
 
-
+	@JsonIgnore
 	public Set<Mark> getMark() {
 		return mark;
 	}
@@ -198,6 +203,7 @@ public class Course {
 		this.mark = mark;
 	}
 
+	@JsonIgnore
 	public List<Map<String, Object>> getClassInfoMapList() {
 		return classInfoMapList;
 	}

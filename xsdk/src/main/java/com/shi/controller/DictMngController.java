@@ -40,7 +40,7 @@ public class DictMngController {
 
 	@ResponseBody
 	@RequestMapping(value = "save")
-	public JSONObject addDict(Dict dict) {
+	public JSONObject saveDict(Dict dict) {
 		
 		
 		if(dict.getDictId()!=null&&!dict.getDictId().equals(""))
