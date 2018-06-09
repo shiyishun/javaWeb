@@ -1,6 +1,8 @@
 package com.shi.service;
 
+import com.shi.common.Page;
 import com.shi.entity.Mark;
+import com.shi.entity.TeachStu;
 
 public interface MarkService {
   
@@ -10,4 +12,9 @@ public interface MarkService {
 	public void update(Mark mark);
 	
 	public void genMarkByCourseId(String courseId) throws Exception;
+	
+	public Mark getById(String markId);
+	
+	public Page<Mark> getPage(String schoolInfoId, String classNo, String grade, String param,
+			 String courseId, int pageNo, int pageSize);
 }

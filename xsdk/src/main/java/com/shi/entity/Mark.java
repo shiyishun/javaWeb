@@ -30,16 +30,10 @@ public class Mark {
 	@JoinColumn(name = "course_id")
 	private Course course;
 	
-	@Column(name="course_name")
-	private String courseName;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(name="stu_name")
-	private String stuName;
-	
 	@Column(name="daily_score")
 	private Float dailScore;
 	

@@ -93,4 +93,19 @@ public class CourseMngController {
 		return json;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "list")
+	public JSONObject getList(HttpServletRequest request){
+		
+		JSONObject json = new JSONObject();
+		String token = request.getHeader("token");
+		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+		User user = (User) userMap.get("user");
+		List<Course> list = courseService.findByUserId(user.getUserId());
+		json.put("code", "0");
+		json.put("data", list);
+		return json;
+	}
+	
+	
 }

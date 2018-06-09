@@ -98,5 +98,13 @@ public class CourseServiceImpl implements CourseService {
 		courseDao.saveOrUpdate(course);
 	}
 	
-	
+	public List<Course> findByUserId(String userId){
+		
+		StringBuffer hql = new StringBuffer("select c from Course c , UserCourseRel ucr " +
+				"where c.courseId=ucr.course.courseId " +
+				"and ucr.user.userId='"+userId+"'");
+		hql.append(" order by c.courseNo asc");
+		return courseDao.findList(hql.toString());
+		
+	}
 }
