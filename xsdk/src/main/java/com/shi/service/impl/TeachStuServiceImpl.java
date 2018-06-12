@@ -28,7 +28,7 @@ public class TeachStuServiceImpl implements TeachStuService {
 			  int pageNo, int pageSize){
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		StringBuffer hql = new StringBuffer("from TeachStu t where t.isTecacher=1 " +
+		StringBuffer hql = new StringBuffer("from TeachStu t where t.isTeacher=1 " +
 				"and (t.user.status=0 or t.user.status=1)");
 		if(schoolInfoId!=null&&schoolInfoId.trim().equals("")){
 			hql.append(" and t.schoolInfo.schoolInfoId =:schoolInfoId");

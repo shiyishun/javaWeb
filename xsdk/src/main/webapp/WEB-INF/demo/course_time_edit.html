@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+  </head>
+
+  <body>
+
+      <!--main content start-->
+          <section class="wrapper">
+  
+          	<!-- BASIC FORM ELELEMNTS -->
+          	<div class="row mt">
+                  <div class="form-panel">
+                  	  <h4 class="mb" id='titleShow'><i class="fa fa-angle-right"></i></h4>
+                      <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                               <input id="courseTimeId" type="text"  class="hidden"">					 
+                          </div>						  
+		                  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*星期</label>
+                              <div class="col-sm-4">
+                                   <select id="week" class="form-control">
+						         </select>
+                              </div>
+							  <p id="errmsg1" class="text-danger"></p>
+                          </div>
+						   <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*开始节数</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="startPeriod" class="form-control" placeholder="输入整数值">
+                              </div>
+							  <p id="errmsg2" class="text-danger"></p>
+                          </div>
+					      <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*结束结束</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="endPeriod" class="form-control" placeholder="输入整数值">
+                              </div>
+							  <p id="errmsg3" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*上课地点</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="classLocation" class="form-control"  placeholder="输入上课地点">
+                              </div>
+							  <p id="errmsg4" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">教室布局</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="classShape" class="form-control" placeholder="输入格式如8*8">
+                              </div>
+							  <p id="errmsg5" class="text-danger"></p>
+                          </div>
+						  <div class="form-group"> 
+						    <div class="col-sm-4">
+						      <button onclick="ensure()" class="btn btn-theme">确定</button>
+							  <button onclick="backPage();" class="btn btn-theme">返回</button>
+						    </div>
+
+						  </div>
+
+						  
+						  
+                      </div>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+          	</div>
+          </section>
+
+
+      
+  <script>
+ 
+      function validateStartPeriod(){
+        
+		  if($("#startPeriod").val().length<1){
+		   
+		       $("#errmsg2").text("*开始节数不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg2").text("");
+			   return true;
+		  }
+	  }
+	     
+	 function validateEndPeriod(){
+        
+		  if($("#endPeriod").val().length<1){
+		   
+		       $("#errmsg3").text("*结束节数不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg3").text("");
+			   return true;
+		  }
+	  }
+		 
+	 function validateClassLocation(){
+        
+		  if($("#classLocation").val().length<1){
+		   
+		       $("#errmsg4").text("*上课地点不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg4").text("");
+			   return true;
+		  }
+	  }
+			  
+			  
+	  $("#startPeriod").blur(  function(){
+         
+		 validateStartPeriod();
+		 
+      }); 
+		 
+	  $("#endPeriod").blur(  function(){
+         
+		 validateEndPeriod();
+		 
+      }); 
+	  
+	  
+	  $("#classLocation").blur(  function(){
+         
+		 validateClassLocation();
+		 
+      }); 
+	  
+	  
+	  var isAdd = true;
+	  function fullData(){
+	     
+	     var courseTimeId = sessionStorage.getItem("courseTimeId"); 
+	     var courseName =sessionStorage.getItem("courseName");
+		 var courseNo =sessionStorage.getItem("courseNo");
+         loadCategory();
+	     if(courseTimeId!=""&&courseTimeId!="null"){
+                
+			  isAdd = false;
+			  $("#titleShow").text("课程管理->课程时间查询-"+courseNo+courseName+"->编辑");
+			  sessionStorage.setItem("courseTimeId",""); 
+		      $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_time_mng/get",//url
+                data: 'courseTimeId='+courseTimeId,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				  
+                    if(result.code==0){
+	                   data = result.data;
+					   $("#courseTimeId").val(data["courseTimeId"]);
+					   $("#week").val(data["week"]);
+					   $("#startPeriod").val(data["startPeriod"]);
+					   $("#endPeriod").val(data["endPeriod"]);
+					   $("#classLocation").val(data["classLocation"]);
+                       $("#classShape").val(data["classShape"]);
+				   
+					}else{
+					    alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+		 
+		 }else{
+		     $("#titleShow").text("课程管理->课程时间查询-"+courseNo+courseName+"->添加");
+
+		 }
+
+	  
+	  }
+	  
+	  
+
+
+	  
+	  function ensure(){
+	  
+               
+			   if(!(validateStartPeriod()&&validateEndPeriod()&&validateClassLocation())){
+			   
+			     return false;
+			   }
+	            
+				var courseId =  sessionStorage.getItem("courseId");
+	            var params = "courseId="+courseId+"&courseTimeId="+$("#courseTimeId").val()+"&week="+$("#week").val()+"&startPeriod="+$("#startPeriod").val()+
+				             "&endPeriod="+$("#endPeriod").val()+"&classLocation="+$("#classLocation").val()+"&classShape="+$("#classShape").val();
+	  
+	         	$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_time_mng/save",//url
+                data: params,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					          var  courseTimeMsg = isAdd?"*课程时间添加成功": "*课程时间编辑成功";
+	                           sessionStorage.setItem("courseTimeMsg", courseTimeMsg); 
+					           $('#main-content').load('course_time_mng.html'); 
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    $.alert("访问异常！");
+					return false;  
+                }
+              }); 
+	  
+	  
+	  }
+	  
+	  function loadCategory(){
+	 
+	        $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/dict_mng/findl",//url
+                data: 'params=星期',
+			//	async:false, 
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+                      data = result.data
+					  if(data.星期 != null)
+					  $.each(data.星期, function (i, item) {  
+                        $("#week").append("<option value='"+item.dictValue+"'>"+ item.dictName+"</option>");
+					
+					  })
+                    }
+                },
+                error : function() {
+	
+					return false;  
+                }
+            }); 
+	  }
+	  
+	  
+	  
+	  function backPage(){
+
+			   $('#main-content').load('course_time_mng.html'); 
+      }	
+   
+	     
+      $(function(){
+          
+          $('select.styled').customSelect();
+		   fullData();
+		  
+      });
+
+  </script>
+
+  </body>
+</html>

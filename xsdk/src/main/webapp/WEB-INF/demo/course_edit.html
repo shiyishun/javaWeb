@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+  </head>
+
+  <body>
+
+      <!--main content start-->
+          <section class="wrapper">
+  
+          	<!-- BASIC FORM ELELEMNTS -->
+          	<div class="row mt">
+                  <div class="form-panel">
+                  	  <h4 class="mb" id='titleShow'><i class="fa fa-angle-right"></i></h4>
+                      <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                               <input id="courseId" type="text"  class="hidden"">					 
+                          </div>
+		                  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*课程编号</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="courseNo" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg1" class="text-danger"></p>
+                          </div>
+						  
+		                  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*课程名称</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="courseName" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg2" class="text-danger"></p>
+                          </div>
+						   <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">学周</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="classDate" class="form-control" placeholder="输入格式如1-12">
+                              </div>
+							  <p id="errmsg3" class="text-danger"></p>
+                          </div>
+					      <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">学时</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="classOrder" class="form-control" placeholder="输入整数值">
+                              </div>
+							  <p id="errmsg4" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">日常比重</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="dailyWeight" class="form-control"  placeholder="输入不大于1的数值">
+                              </div>
+							  <p id="errmsg5" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">期末比重</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="finalWeight" class="form-control" readonly = "readonly" placeholder="">
+                              </div>
+							  <p id="errmsg6" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">警戒线</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="picketLine" class="form-control"  placeholder="输入整数值">
+                              </div>
+							  <p id="errmsg7" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">描述</label>
+                              <div class="col-sm-4">
+                                  <textarea id="description" maxlength="80" class="form-control" rows="3"  placeholder="输入需少于80个字符"></textarea>
+                              </div>
+							  <p id="errmsg8" class="text-danger"></p>
+                          </div>
+						  <div class="form-group"> 
+						    <div class="col-sm-4">
+						      <button onclick="ensure()" class="btn btn-theme">确定</button>
+							  <button onclick="backPage();" class="btn btn-theme">返回</button>
+						    </div>
+
+						  </div>
+
+						  
+						  
+                      </div>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+          	</div>
+          </section>
+
+
+      
+  <script>
+ 
+      function validateCourseNo(){
+        
+		  if($("#courseNo").val().length<1){
+		   
+		       $("#errmsg1").text("*学校编号不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg1").text("");
+			   return true;
+		  }
+	  }
+	     
+	 function validateCourseName(){
+        
+		  if($("#courseName").val().length<1){
+		   
+		       $("#errmsg2").text("*学校名称不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg2").text("");
+			   return true;
+		  }
+	  }
+		 
+	function validateDailyWeight(){
+		 if($("#dailyWeight").val().length<1){
+		       $("#errmsg5").text("*日常比重不能为空");
+			   return false;
+		  }else{
+		        var re = /[\d.]/;
+		       if(!re.test($("#dailyWeight").val())){
+			       $("#errmsg5").text("只允许输入数值");
+			       return false;
+			   }
+		       if(parseFloat($("#dailyWeight").val()) > 1){
+			       $("#errmsg5").text("不能输入大于1的数");
+			       return false;
+			   }
+		       $("#finalWeight").val(1-$("#dailyWeight").val());
+		       $("#errmsg5").text("");
+			   return true;
+		  }
+	  }
+			  
+			  
+	  $("#courseNo").blur(  function(){
+         
+		 validateCourseNo();
+		 
+      }); 
+		 
+	  $("#courseName").blur(  function(){
+         
+		 validateCourseName();
+		 
+      }); 
+	  
+	  
+	  $("#dailyWeight").blur(  function(){
+          
+		 validateDailyWeight();
+		 
+      }); 
+	  
+	  
+	  var isAdd = true;
+	  function fullData(){
+	     
+	     var courseId = sessionStorage.getItem("courseId"); 
+	        
+	     if(courseId!=""&&courseId!="null"){
+         
+			  isAdd = false;
+			  $("#titleShow").text("课程管理->编辑");
+			  sessionStorage.setItem("courseId",""); 
+		      $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_mng/get",//url
+                data: 'courseId='+courseId,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				  
+                    if(result.code==0){
+					    var data = result.data;
+				
+					   $("#courseId").val(data["courseId"]);
+					   $("#courseName").val(data["courseName"]);
+					   $("#courseNo").val(data["courseNo"]);
+					   $("#classDate").val(data["classDate"]);
+					   $("#classOrder").val(data["classOrder"]);
+                       $("#dailyWeight").val(data["dailyWeight"]);
+					   $("#finalWeight").val(data["finalWeight"]);
+					   $("#picketLine").val(data["picketLine"]);
+					   $("#description").text(data["description"]==null?"":data["description"]);
+					}else{
+					    alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+		 
+		 }else{
+		     $("#titleShow").text("课程管理->添加");
+
+		 }
+	  
+	  
+	  }
+	  
+	  
+
+
+	  
+	  function ensure(){
+	  
+               
+			   if(!(validateCourseNo()&&validateCourseName()&&validateDailyWeight())){
+			   
+			     return false;
+			   }
+	  
+	            var course = {courseId: $("#courseId").val(), courseName: $("#courseName").val(), classDate: $("#classDate").val(),
+  				   courseNo: $("#courseNo").val(), classOrder: $("#classOrder").val(), dailyWeight: $("#dailyWeight").val(), finalWeight: $("#finalWeight").val(),
+				   picketLine: $("#picketLine").val(),
+				   description: $("#description").val()
+				   }
+	  
+	  
+	         	$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_mng/save",//url
+                data: course,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					          var  courseMsg = isAdd?"*课程添加成功": "*课程编辑成功";
+	                           sessionStorage.setItem("courseMsg", courseMsg); 
+					           $('#main-content').load('course_search.html'); 
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    $.alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	        function backPage(){
+
+			   $('#main-content').load('course_search.html'); 
+            }	
+   
+	     
+      $(function(){
+	      
+          $('select.styled').customSelect();
+		   fullData();
+		  
+      });
+
+  </script>
+
+  </body>
+</html>

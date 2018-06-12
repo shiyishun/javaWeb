@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +31,12 @@ import com.shi.service.MarkService;
 @RequestMapping(value = "mark_mng/")
 public class MarkMngController {
 
+	private static Logger logger = LogManager
+			.getLogger(MarkMngController.class);
+	
 	@Autowired
 	private MarkService markService;
+	
 	
 	
 	@ResponseBody
@@ -48,7 +54,7 @@ public class MarkMngController {
 			markService.genMarkByCourseId(courseId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 			json.put("code", "1122");
 			json.put("errmsg", "生成成绩表异常");	
 			return json;
@@ -68,7 +74,7 @@ public class MarkMngController {
 		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
 		User user = (User) userMap.get("user");
         
-		if(user.getTeachStu().getIsTecacher()!=0){
+		if(user.getTeachStu().getIsTeacher()!=0){
 			json.put("code", "2011");
 			json.put("errmsg", "当前用户没有权限");
 			return json;

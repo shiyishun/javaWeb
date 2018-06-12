@@ -38,5 +38,13 @@ public class UserCourseRelServiceImpl implements UserCourseRelService {
 			userCourseRelDao.save(userCourseRel);
 		}
 	}
+	public List<UserCourseRel> findByTwoId(String courseId, String courseTimeId){
+		
+		String hql = "from UserCourseRel ucr where ucr.courseTime.courseTimeId='" + courseTimeId
+				+ "'" + " and ucr.course.courseId='" + courseId + "'";
 
+		List<UserCourseRel> list = userCourseRelDao.findList(hql);
+		
+		return list;
+	}
 }

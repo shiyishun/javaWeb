@@ -1,6 +1,7 @@
 package com.shi.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +56,15 @@ public class CourseTimeServiceImpl implements CourseTimeService {
 		
 		courseTimeDao.saveOrUpdate(courseTime);
 	}
+	
+	public List<CourseTime> findByCourseId(String courseId){
+		
+		StringBuffer hql = new StringBuffer("select ct from CourseTime ct, CourseTimeRel ctr" +
+				" where ct.courseTimeId = ctr.courseTime.courseTimeId " +
+				" and ctr.course.courseId = '"+courseId+"'");
+		
+		return courseTimeDao.findList(hql.toString());
+	}
+	
+	
 }

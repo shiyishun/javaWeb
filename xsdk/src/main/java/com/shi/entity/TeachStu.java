@@ -51,7 +51,7 @@ public class TeachStu {
 	private String classNo;
 	
 	@Column(name="is_teacher")
-	private Integer isTecacher;
+	private Integer isTeacher;
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
@@ -135,12 +135,12 @@ public class TeachStu {
 		this.classNo = classNo;
 	}
 
-	public Integer getIsTecacher() {
-		return isTecacher;
+	public Integer getIsTeacher() {
+		return isTeacher;
 	}
 
-	public void setIsTecacher(Integer isTecacher) {
-		this.isTecacher = isTecacher;
+	public void setIsTeacher(Integer isTeacher) {
+		this.isTeacher = isTeacher;
 	}
 
 	public User getUser() {

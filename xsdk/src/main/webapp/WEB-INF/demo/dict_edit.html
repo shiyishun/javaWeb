@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+  </head>
+
+  <body>
+
+      <!--main content start-->
+          <section class="wrapper">
+  
+          	<!-- BASIC FORM ELELEMNTS -->
+          	<div class="row mt">
+                  <div class="form-panel">
+                  	  <h4 class="mb" id='titleShow'><i class="fa fa-angle-right"></i></h4>
+                      <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                               <input id="dictId" type="text"  class="hidden"">					 
+                          </div>
+                          <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">字典类别</label>
+                              <div class="col-sm-4">
+                                 <select id="dictCategory" class="form-control">
+						           <option value="">无</option>
+						         </select>
+                              </div>
+							 
+                          </div>
+		                  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*字典名称</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="dictName" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg1" class="text-danger"></p>
+                          </div>
+						   <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*字典值</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="dictValue" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg2" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">字典描述</label>
+                              <div class="col-sm-4">
+                                  <textarea id="description" maxlength="80" class="form-control" rows="3"  placeholder="需少于80个字符"></textarea>
+                              </div>
+							  <p id="errmsg3" class="text-danger"></p>
+                          </div>
+						    
+						  <div class="form-group"> 
+						    <div class="col-sm-2">
+						      <button onclick="ensure()" class="btn btn-theme">确定</button>
+							  <button onclick="backPage();" class="btn btn-theme">返回</button>
+						    </div>
+
+						  </div>
+                      </div>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+          	</div>
+          </section>
+
+
+      
+  <script>
+ 
+      function validateDictName(){
+        
+		  if($("#dictName").val().length<1){
+		   
+		       $("#errmsg1").text("*字典名称不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg1").text("");
+			   return true;
+		  }
+	  }
+	     
+	 function validateDictValue(){
+        
+		  if($("#dictValue").val().length<1){
+		   
+		       $("#errmsg2").text("*字典值不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg2").text("");
+			   return true;
+		  }
+	  }
+		 
+			  
+	  $("#dictName").blur(  function(){
+         
+		 validateDictName();
+		 
+      }); 
+		 
+	  $("#dictValue").blur(  function(){
+         
+		 validateDictValue();
+		 
+      }); 
+	  
+	  var isAdd = true;
+	  function fullData(){
+	     
+	     var dictId = sessionStorage.getItem("dictId"); 
+	        
+	     if(dictId!=""&&dictId!="null"){
+         
+			  isAdd = false;
+			  $("#titleShow").text("字典设置->编辑");
+			  sessionStorage.setItem("dictId",""); 
+		      $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/dict_mng/get",//url
+                data: 'dictId='+dictId,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				  
+                    if(result.code==0){
+					    var data = result.data;
+				
+		               if(data.dictCategory!=null){
+					      $("#dictCategory").empty();
+					      $("#dictCategory").append("<option value='"+data.parentId+"'>"+ data.dictCategory+"</option>");
+					   
+					   }
+					   $("#dictId").val(data["dictId"]);
+					   $("#dictName").val(data["dictName"]);
+					   $("#dictValue").val(data["dictValue"]);
+					   $("#description").text(data["description"]==null?"":data["description"]);
+					   
+					   $('#dictCategory').attr('disabled', true);
+					   $('#dictName').attr('disabled', true);
+					   
+					}else{
+					    alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+		 
+		 }else{
+		     $("#titleShow").text("字典设置->添加");
+		    loadCategory()
+		 }
+	  
+	  
+	  }
+	  
+	  
+	  function loadCategory(){
+	 
+	        $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/dict_mng/findpc",//url
+                data: '',
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  $.each(result.data, function (i, item) {
+					    
+                        $("#dictCategory").append("<option value='"+item.dictId+"'>"+ item.dictName+"</option>");
+					
+					  })
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+	 	  
+	  }
+
+	  
+	  function ensure(){
+	  
+               
+			   if(!(validateDictName()&&validateDictValue())){
+			   
+			     return false;
+			   }
+	  
+	            var dict = {dictId: $("#dictId").val(),  parentId: $("#dictCategory").val(), dictCategory: $("#dictCategory").find("option:selected").text(),
+  				   dictName: $("#dictName").val(), 
+				   dictValue: $("#dictValue").val(), description: $("#description").val()}
+	  
+	  
+	         	$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/dict_mng/save",//url
+                data: dict,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					          var  dictInfomsg = isAdd?"*字典添加成功": "*字典编辑成功";
+	                           sessionStorage.setItem("dictInfomsg", dictInfomsg); 
+					           $('#main-content').load('dict_setting.html'); 
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    $.alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	        function backPage(){
+
+			   $('#main-content').load('dict_setting.html'); 
+            }	
+   
+	     
+	  //custom select box
+      $(function(){
+	      
+          $('select.styled').customSelect();
+		   fullData();
+		  
+      });
+
+  </script>
+
+  </body>
+</html>

@@ -283,6 +283,7 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	    Query q2 = this.getCurrentSession().createQuery(countHql);
 		this.setParameterToQuery(q2, params);
 		page.setTotalCount((long) q2.uniqueResult());
+		page.setTotalPage(0);
 	    return page;
 		
 	}
@@ -307,12 +308,13 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	    List<T> tList =  q1.setFirstResult((page.getCunrrentPage() - 1) * page.getPageSize())
 	    		.setMaxResults(page.getPageSize()).list();
 	    page.setList(tList);
-	    String fromSql = sql.substring(sql.indexOf("from"));
+	 //   String fromSql = sql.substring(sql.indexOf("from"));
 		// 返回查询总数  
-	    String countHql="select count(*) "+ fromSql;
+	    String countHql="select count(*) from ("+ sql+") temp";
 	    Query q2 = this.getCurrentSession().createSQLQuery(countHql);
 		this.setParameterToQuery(q2, params);
 		page.setTotalCount(((BigInteger)q2.uniqueResult()).longValue());
+		page.setTotalPage(0);
 	    return page;
 		
 	}

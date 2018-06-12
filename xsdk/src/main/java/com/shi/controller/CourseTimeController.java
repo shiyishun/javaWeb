@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,9 @@ import com.shi.service.CourseTimeService;
 @RequestMapping(value = "course_time_mng/")
 public class CourseTimeController {
 
+	private static Logger logger = LogManager
+			.getLogger(CourseTimeController.class);
+	
 	@Autowired
 	private CourseTimeService courseTimeService;
 
@@ -50,9 +55,10 @@ public class CourseTimeController {
 		if (size == null || size.equals("")) {
 			size = "10";
 		}
-
+ 
 		int pageNo = Integer.valueOf(no);
 		int pageSize = Integer.valueOf(size);
+
 		Page<CourseTime> page = courseTimeService.getPage(courseId, pageNo,
 				pageSize);
 		Map<String, String> dictMap = DictUtil.dictKeyValue("星期");
@@ -61,6 +67,7 @@ public class CourseTimeController {
 		json.put("code", "0");
 		json.put("data", page);
 		json.put("dict", dictJson);
+	
 		return json;
 	}
 
@@ -84,6 +91,7 @@ public class CourseTimeController {
 		CourseTime courseTime = courseTimeService.getById(courseTimeId);
 		json.put("code", "0");
 		json.put("data", courseTime);
+
 		return json;
 	}
 
@@ -120,6 +128,7 @@ public class CourseTimeController {
 		courseTimeService.saveOrUpdate(courseTime);
 		json.put("code", "0");
 		json.put("data", "");
+
 		return json;
 	}
 

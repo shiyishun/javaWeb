@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+
+  </head>
+
+  <body>
+
+
+        <section class="wrapper">
+         
+              <div class="row mt">
+			  
+                  <div class="col-md-12">
+                      
+                      <div class="content-panel">
+					  <h4 class="mb" id='titleShow'><i class="fa fa-angle-right"></i>角色权限</h4>
+					     <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                               <div class="col-sm-2">
+							      <p id="infomsg" class="col-sm-2 control-label"></p>
+                              </div>
+							   <div class="col-sm-2"></div>
+							  <div class="col-sm-3">
+                                 <select id="roleId" class="form-control"  title="请选择要查询的课程">
+						          <option value="" >*请选择要查询的角色</option>
+								 </select>
+                              </div>
+                              <div class="col-sm-3">
+                                  <input id='param' type="text" class="form-control"  placeholder="请输入查询的权限名称">
+                              </div>
+							  <div class="col-sm-2">
+							       <button class="btn btn-theme" onclick="search()">查询</button> 
+								   <button class="btn btn-theme" onclick="backPage()">返回</button> 
+								 <!-- <button class="btn btn-theme" onclick="add()">添加</button>  --> 
+							  </div>
+
+                          </div>
+						  </div>
+                          <table class="table table-striped table-advance table-hover">
+	                  	
+	                  	  	  <hr>
+                              <thead>
+                                <tr>
+								  <th width="20%">权限编号</th>
+                                  <th width="20%">权限名称</th>
+                                  <th width="20%">权限地址</th>
+								  <th width="10%">是否菜单</th>
+								  <th width="10%">是否页面</th>
+								  <th width="20%">权限描述</th>
+                                
+                              </tr>
+                              </thead>
+                              <tbody id="list-wrap">
+                  
+                              </tbody>
+                          </table>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+        <div class="ui-page" id="ui-page"></div>
+		</section><! --/wrapper -->
+    <!--script for this page-->
+    
+  <script>
+      currentPage=1;
+	  pageSize = 10;
+      totalPage = 0;        
+	  totalCount = 0;
+
+
+      function prePage(){
+      	currentPage--;
+      	sendAjax(currentPage, pageSize);
+      }
+      function nextPage(){
+      	currentPage++;
+      	sendAjax(currentPage, pageSize);
+      }
+	  
+	  function backPage(){
+
+			   $('#main-content').load('role_auth.html'); 
+            }	
+   
+	  
+	  
+	  function reqestData(page, pageSize, isInit, ifPaging){
+	    
+	      var param = $('#param').val();
+		  var roleId = $('#roleId').val();;
+		  
+		  if(isInit){
+		    roleId  = sessionStorage.getItem("roleId"); 	       
+			sessionStorage.setItem("roleId", ""); 
+		    loadSelect(roleId); 
+		  }
+		  
+		  
+	      $.ajax({
+			 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/permi/page" ,//url 
+                data: 'roleId='+roleId+'&param='+param+'&no='+page+'&'+'size='+pageSize,
+				 headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+	            xhrFields: {
+                  withCredentials: true
+                },
+                success: function (result) {
+				
+                    if(result.code==0){
+					      loadData(result.data);
+						  if(ifPaging){
+                          totalPage = result.data.totalPage;        
+	                      pageSize = result.data.pageSize;
+						  totalCount = result.data.totalCount;
+                          $("#ui-page").paging({pageNum:3,totalPage:totalPage,pageSize:pageSize,totalCount:totalCount});
+						  }
+					}else{					
+					   $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+                     $.alert("访问异常！");
+				
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	  
+
+	  
+	  	  
+	  function search(){
+	      reqestData(1, pageSize, false, true);
+	  }
+	  
+	  function loadData(data){
+	      var list = data.list;
+          $("tbody").empty();
+	      for (var i = 0; i < list.length; i++) {  
+		          var permiId = list[i]['permiId'];		
+                  var permiNo = list[i]['permiNo'];					  
+				  var permiName = list[i]['permiName'];
+				  var permiUrl = list[i]['reqUrl'];
+				   var isMenu = list[i]['isMenu']==0?"是":"否";
+				  var isPage = list[i]['isPage']==0?"是":"否";
+				  var description = list[i]["description"]!=null?list[i]["description"]:"";
+                 
+	              var tr = $("<tr></tr>");
+
+                  tr.html('<td>'+permiNo +'</td>' +'<td>'+permiName +'</td>' 
+				  +'<td>'+permiUrl+'</td><td>'+ isMenu +'</td><td>'+isPage +'</td>' 
+				  +'<td>'+ description +'</td>'
+				  );
+              
+                  $("tbody").append(tr);
+				 
+	      }
+	  }
+	  
+	    /* ajax 请求更新数据 */
+      function sendAjax(page, size){
+ 	   reqestData(page, pageSize, false, false);
+      }
+
+	  
+	  	  function loadSelect(value){
+	  
+	        $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/role_mng/finda",//url
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  var data = result.data;
+					  courseList  = result.data;
+					  $.each(data, function (i, item) {
+                        $("#roleId").append("<option value='"+item.roleId+"'>"+item.roleName+"</option>");
+					    
+					  })
+					  
+					   if(value!=null&&value!=""){
+					     $("#roleId").val(value);
+					   }
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  }
+
+	  
+      $(function(){
+	  
+	      reqestData(1, pageSize, true, true);
+
+          $('select.styled').customSelect();
+      });
+
+  </script>
+
+  </body>
+</html>

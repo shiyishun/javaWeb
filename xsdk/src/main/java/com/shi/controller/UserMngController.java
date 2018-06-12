@@ -106,7 +106,7 @@ public class UserMngController {
 			json.put("code", "0");
 			json.put("data", ComUtil.toHex(md5));
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
+		
 			json.put("code", "1");
 			json.put("data", "加密失败");
 			logger.error(e.toString());
@@ -155,6 +155,7 @@ public class UserMngController {
 			if (user == null||user.getStatus()==2) {
 				json.put("code", "1");
 				json.put("errmsg", "账号不存在");
+				return json;
 			}
 			
 			if (user.getStatus() == 1) {
@@ -189,7 +190,7 @@ public class UserMngController {
 				return json;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 			json.put("code", "101");
 			json.put("errmsg", "服务异常");
 			return json;
@@ -371,9 +372,9 @@ public class UserMngController {
 		teachStu.setName(name);
 		//是否位教师
 	    if("1".equals(roleId)){//教师
-	    	teachStu.setIsTecacher(0);
+	    	teachStu.setIsTeacher(0);
 	    }else{//学生
-	    	teachStu.setIsTecacher(1);
+	    	teachStu.setIsTeacher(1);
 	    }
 		
 		SchoolInfo schoolInfo = schoolInfoService.getById(schoolInfoId);
@@ -391,7 +392,7 @@ public class UserMngController {
 	    userService.save(user);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 			json.put("code", "101");
 			json.put("errmsg", "服务异常");
 			return json;
@@ -469,9 +470,9 @@ public class UserMngController {
 		   
 			//是否位教师
 		    if("1".equals(roleId)){//教师
-		    	teachStu.setIsTecacher(0);
+		    	teachStu.setIsTeacher(0);
 		    }else{//学生
-		    	teachStu.setIsTecacher(1);
+		    	teachStu.setIsTeacher(1);
 		    }
 		   
 		  SchoolInfo schoolInfo = schoolInfoService.getById(schoolInfoId);
@@ -500,7 +501,7 @@ public class UserMngController {
 	    userService.update(user);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 			json.put("code", "101");
 			json.put("errmsg", "服务异常");
 			return json;

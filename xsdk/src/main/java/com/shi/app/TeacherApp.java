@@ -25,11 +25,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.shi.entity.CallTheroll;
 import com.shi.entity.Course;
+import com.shi.entity.CourseTime;
 import com.shi.entity.TeachStu;
 import com.shi.entity.User;
 import com.shi.entity.UserCourseRel;
 import com.shi.service.CallTherollService;
 import com.shi.service.CourseService;
+import com.shi.service.CourseTimeService;
+import com.shi.service.UserCourseRelService;
 import com.shi.service.UserMngService;
 
 
@@ -43,8 +46,10 @@ public class TeacherApp {
 	private CourseService courseService;
 	@Autowired
 	private CallTherollService callTherollService;
-	
-	
+	@Autowired
+	private CourseTimeService courseTimeService;
+	@Autowired
+	private UserCourseRelService userCourseRelService;
 	/**
 	 * 通过用户ID获取所有课程
 	 * @param request
@@ -85,25 +90,27 @@ public class TeacherApp {
 	@ResponseBody
 	@RequestMapping(value = "create_signin")
     public JSONObject createSignin(HttpServletRequest request, 
-    		HttpServletResponse response, String courseId){
+    		HttpServletResponse response, String courseId, 
+    		String courseTimeId, String callOrder){
 	
 		JSONObject json = new JSONObject();
 		Course course = courseService.getById(courseId);
-		Set<UserCourseRel> ucrSet = course.getUserCourseRelSet();
+		CourseTime courseTime = courseTimeService.getById(courseTimeId);
+		List<UserCourseRel> ucrSet = userCourseRelService.findByTwoId(courseId, courseTimeId);
+		
 		Iterator<UserCourseRel> it = ucrSet.iterator(); 
 		
 		while (it.hasNext()) {  
 			UserCourseRel ucr = it.next();  
 		    TeachStu ts = ucr.getUser().getTeachStu();
-		    if(1==ts.getIsTecacher()){
+		    if(1==ts.getIsTeacher()){
 		    	CallTheroll callTheroll = new CallTheroll();
 		    	callTheroll.setCallDate(new Date());
 		    	callTheroll.setCallPosition("0*0");
 		    	callTheroll.setCallState(0);
 		    	callTheroll.setCourse(course);
-		    	callTheroll.setStuName(ts.getName());
-		    	callTheroll.setCourseName(course.getCourseName());
-		    	callTheroll.setStuNo(ts.getNo());
+		    	callTheroll.setCourseTime(courseTime);
+		    	callTheroll.setCallOrder(Integer.valueOf(callOrder));
 		    	callTheroll.setUser(ucr.getUser());
 		    	callTherollService.save(callTheroll);
 		    }

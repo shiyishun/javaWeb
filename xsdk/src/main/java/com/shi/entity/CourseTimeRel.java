@@ -12,6 +12,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "tb_course_time_rel")
@@ -27,6 +29,7 @@ public class CourseTimeRel {
     @JoinColumn(name = "course_id")  
     private Course course;
     
+    
     @OneToOne(fetch = FetchType.LAZY)  
     @JoinColumn(name = "course_time_id")  
     private CourseTime courseTime;
@@ -39,6 +42,7 @@ public class CourseTimeRel {
 		this.courseTimeRelId = courseTimeRelId;
 	}
 
+	@JsonIgnore
 	public Course getCourse() {
 		return course;
 	}
@@ -47,6 +51,7 @@ public class CourseTimeRel {
 		this.course = course;
 	}
 
+	@JsonIgnore
 	public CourseTime getCourseTime() {
 		return courseTime;
 	}

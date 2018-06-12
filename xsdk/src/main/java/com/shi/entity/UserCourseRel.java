@@ -33,6 +33,11 @@ public class UserCourseRel {
     @JoinColumn(name = "course_id")  
     private Course course;
 
+    @ManyToOne(fetch = FetchType.LAZY)  
+    @JoinColumn(name = "course_time_id")  
+    private CourseTime courseTime;
+    
+    
 	public String getUserCourseRelId() {
 		return userCourseRelId;
 	}
@@ -57,6 +62,15 @@ public class UserCourseRel {
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	@JsonIgnore
+	public CourseTime getCourseTime() {
+		return courseTime;
+	}
+
+	public void setCourseTime(CourseTime courseTime) {
+		this.courseTime = courseTime;
 	}
     
     

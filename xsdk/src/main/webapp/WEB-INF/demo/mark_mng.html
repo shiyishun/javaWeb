@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+
+  </head>
+
+  <body>
+
+
+        <section class="wrapper">
+         
+              <div class="row mt">
+			  
+                  <div class="col-md-12">
+                      
+                      <div class="content-panel">
+					  <h4 class="mb"><i class="fa fa-angle-right"></i>成绩管理</h4>
+					     <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                              <div class="col-sm-2">
+							      <p id="infomsg" class="col-sm-2 control-label"></p>
+                              </div> 
+                              <div class="col-sm-2">
+                                 <select id="courseId" class="form-control"  title="请选择要查询的课程">
+						          <option value="" >请选择要查询的课程</option>
+								 </select>
+                              </div>							  
+                              <div class="col-sm-2">
+                                 <select id="classNo" class="form-control"  title="请选择要查询的班级">
+						          <option value="" >请选择要查询的班级</option>
+								 </select>
+                              </div>
+              						  
+                              <div class="col-sm-2">
+                                  <input class="Wdate form-control" type="text" id="grade" style="height: 34px" placeholder="请选择要查询的年级"
+                                              onFocus="WdatePicker({isShowClear:true,dateFmt:'yyyy级'})" />
+                              </div>
+
+                              <div class="col-sm-2">
+                                  <input id='param' type="text" class="form-control"  placeholder="请输入查询的学生姓名或者学号">
+                              </div>
+							  <div class="col-sm-2">
+							       <button class="btn btn-theme" onclick="search()">查询</button> 
+								    <button class="btn btn-theme" onclick="gen()">生成成绩表</button> 
+							  </div>
+
+                          </div>
+						  </div>
+                          <table class="table table-striped table-advance table-hover">
+	                  	 
+	                  	  	  <hr>
+                              <thead>
+                                <tr>
+                                  <th width="10%">学号</th>
+                                  <th width="10%">姓名</th>
+								  <th width="10%">性别</th>
+                                  <th width="10%">年级</th>
+								  <th width="10%">专业</th>
+								  <th width="10%">班级</th>
+								  <th width="10%">平时成绩</th>
+								  <th width="10%">考试成绩</th>
+								  <th width="10%">期末成绩</th>
+                                  <th width="10%">成绩设置</th>
+                              </tr>
+                              </thead>
+                              <tbody id="list-wrap">
+                  
+                              </tbody>
+                          </table>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+        <div class="ui-page" id="ui-page"></div>
+		</section><! --/wrapper -->
+    <!--script for this page-->
+    
+  <script>
+     
+	  currentPage=1;
+	  pageSize = 10;
+      totalPage = 0;        
+	  totalCount = 0;
+	
+	  finalWeight = 0;
+	  dailyWeight = 0;
+	  courselist =[];
+
+      function prePage(){
+      	currentPage--;
+      	sendAjax(currentPage, pageSize);
+      }
+      function nextPage(){
+      	currentPage++;
+      	sendAjax(currentPage, pageSize);
+      }
+	  
+	  function reqestData(page, pageSize, isInit, ifPaging){
+	     
+		 var courseId = $('#courseId').val();
+	      var param = $('#param').val();
+		  var classNo = $('#classNo').val();
+		  var grade = $('#grade').val();
+	      $.ajax({
+			 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/mark_mng/page" ,//url
+                data: 'grade='+grade+'&classNo='+classNo+'&param='+param+'&courseId='+courseId+'&no='+page+'&'+'size='+pageSize,
+				 headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+	            xhrFields: {
+                  withCredentials: true
+                },
+                success: function (result) {
+				
+                    if(result.code==0){
+					 					  
+					    loadData(result);
+						if(isInit){
+						  if(result.dict.班级 != null)
+					        $.each(result.dict.班级, function (i, item) {
+					    
+                            $("#classNo").append("<option value='"+item.dictValue+"'>"+ item.dictName+"</option>");
+											       
+					      })
+						                          
+						 }
+						 if(ifPaging){
+						 
+						  totalPage = result.data.totalPage;        
+	                      pageSize = result.data.pageSize;
+						  totalCount = result.data.totalCount;
+                          $("#ui-page").paging({pageNum:3,totalPage:totalPage,pageSize:pageSize,totalCount:totalCount});
+						 }
+
+					
+					
+				    }else{					
+					   $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+                     $.alert("访问异常！");
+				
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	  
+	  	  
+	  function search(){
+	      reqestData(1, pageSize, false, true);
+	  }
+	  
+	  function gen(){
+	        var courseId = $('#courseId').val();
+			if(courseId==null){
+			 $.alert("请先选择课程");
+			 return ;
+			}
+	     	$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/mark_mng/gen_mark",//url
+				data: 'courseId='+courseId,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					   $.alert("生成成绩表成功");
+					   reqestData(1, pageSize, true);
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  		  
+	  }
+
+	  
+	  		$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_mng/list",//url
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  var data = result.data;
+					  courseList  = result.data;
+					  $.each(data, function (i, item) {
+                        $("#courseId").append("<option value='"+item.courseId+"'>"+item.courseName+"</option>");
+					    
+					  })
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  
+	  
+	  
+	  
+	  
+	  function loadData(result){
+	      var list = result.data.list;
+		  var dictClassNo = result.dictMap.班级;
+		  var dictGender = result.dictMap.性别;
+          $("tbody").empty();
+	      for (var i = 0; i < list.length; i++) {  
+		          var markId = list[i][0];
+				  var no = list[i][1];
+				  var name = list[i][2];
+				  var gender = dictGender[list[i][3]];
+				  var grade = list[i][4];
+				  var major = list[i][5];
+				  var classNo = dictClassNo[list[i][6]];
+				  
+				  var dailyScore = list[i][7];
+				  var examScore = list[i][8];
+                  var finalScore = list[i][9];
+	              var tr = $("<tr></tr>");
+
+                  tr.html('<td>'+no+'</td><td>'+name+'</td>'
+				  +'<td>'+gender+'</td><td>'+grade+'</td><td>'+major+'</td><td>'+classNo+'</td>'
+				  +'<td>'+dailyScore+'</td><td>'+examScore+'</td><td>'+finalScore+'</td>'
+				  +'<td><button onclick="setMark(\''+markId+'\',this)"title="成绩设置" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>'
+				  );
+              
+                  $("tbody").append(tr);
+				 
+	      }
+	  }
+	  
+	    /* ajax 请求更新数据 */
+      function sendAjax(page, size){
+ 	   reqestData(page, pageSize, false, false);
+      }
+
+	  
+	 $("select#courseId").change(function(){
+       var courseId = $('#courseId').val();
+		  for(var i=0;i<courseList.length;i++){
+		     if(courseId==courseList[i]["courseId"]){
+			    finalWeight = courseList[i]["finalWeight"];
+				dailyWeight = courseList[i]["dailyWeight"];
+			 }
+		  }
+    });
+
+	  
+	  function setMark(markId,obj){
+	    	  
+         tdObj = $(obj).parent().parent().children("td");
+         var dailyScore = tdObj.get(6).innerHTML; 
+         var finalScore = tdObj.get(7).innerHTML; 
+         var examScore = tdObj.get(8).innerHTML; 
+
+	    $.confirm({
+          title: '成绩设置',
+          content: '' +
+            '<form  class="formName">' +
+			'<div class="form-group">' +
+			'<label>平时成绩：</label>' +
+	        '<input type="text" id="dailyScore" value="'+dailyScore+'" class="form-control" required />' +
+			'</div>' +
+			'<div class="form-group">' +
+		    '<label>考试成绩：</label>' +
+            '<input type="text" id="finalScore" value="'+finalScore+'" class="form-control" required />' +
+			'</div>' +
+			'<div class="form-group">' +
+		    '<label>期末成绩：</label>' +
+			'<input type="text" id="examScore"  readonly = "readonly" value="'+examScore+'" class="form-control" required />' +
+            '</div>' +
+			'<div>' +
+			'<p id="infomsg" class="control-label">日常比重：'+dailyWeight+'，期末比重：'+finalWeight+'</p>' +
+			'<p id="infomsg" class="control-label">期末成绩=平时成绩*日常比重+考试成绩*期末比重</p>' +
+            '</div>' +	
+            '<div>' +
+            '<p id="errmsg" class="text-danger"></p>' +
+            '<div>' +			
+            '</form>',
+          buttons: {
+            formSubmit: {
+			  text: '确定',
+              btnClass: 'btn-blue',
+              action: function () {
+               
+               if(!valiDailyScore()||!valiDailyScore()){
+			      return false;
+			   }
+			   
+
+			  $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/mark_mng/set_mark",//url
+				data: 'markId='+markId+"&dailyScore="+$('#dailyScore').val()+"&finalScore="+$('#finalScore').val()+"&examScore="+$('#examScore').val(),
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+                       		tdObj.get(6).innerHTML=$('#dailyScore').val(); 
+                            tdObj.get(7).innerHTML=$('#finalScore').val(); 
+                            tdObj.get(8).innerHTML=$('#examScore').val(); 	
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+			   
+			   
+			   
+	
+              }
+            },
+            cancel: {
+			  text: '取消',
+			  action: function () {     
+              }
+            }
+          },onContentReady: function () {
+      
+          $("#dailyScore").blur(function(){ 
+            valiDailyScore();
+		 
+		  }); 
+		  
+	    $("#finalScore").blur(function(){
+		  if(valiFinalScore()){ 
+		    var examScore = $('#dailyScore').val()*dailyWeight + $('#finalScore').val()*finalWeight;
+		    $('#examScore').val(Number(examScore).toFixed(2));
+		  }
+		  
+        });  
+ 
+        $("#dailyScore").blur(function(){
+		  if(valiFinalScore()){ 
+		    var examScore = $('#dailyScore').val()*dailyWeight + $('#finalScore').val()*finalWeight;
+		    $('#examScore').val(Number(examScore).toFixed(2));
+		  }
+		  
+        });  
+ 
+ 
+ 
+  		  }
+        });
+		
+
+		
+		var reg = new RegExp("^[0-9]+([.]{1}[0-9]+){0,1}$");  
+		function valiDailyScore(){
+		  
+		   if($('#dailyScore').val().length<1){
+		     $("#errmsg").text('请入平时成绩');
+		     return false;
+		   }
+		   if(!reg.test($('#dailyScore').val())){
+		   	 $("#errmsg").text('请入整数或者小数');
+		     return false;
+		   }
+		   
+		   $("#errmsg").text('');
+		   return true;
+		}
+		
+		function valiFinalScore(){
+		
+		   if($('#finalScore').val().length<1){
+		     $("#errmsg").text('请入考试成绩');
+		     return false;
+		   }
+		   if(!reg.test($('#finalScore').val())){
+		   	 $("#errmsg").text('请入整数或者小数');
+		     return false;
+		   }
+		   
+		   $("#errmsg").text('');
+		   return true;
+		    
+		}
+		
+		
+ 
+		  
+		  
+	  }
+	  
+	  
+	  
+	  
+	  
+      $(function(){
+	  
+	      reqestData(1, pageSize, true, true);
+	  
+          var markInfomsg = sessionStorage.getItem("markInfomsg");
+
+		  if(markInfomsg!=""&&markInfomsg!=null){
+		      $('#infomsg').text(markInfomsg); 
+			  sessionStorage.setItem("markInfomsg", ""); 
+		  }else{
+		  
+		      $('#infomsg').text("");
+		  }
+	  
+          $('select.styled').customSelect();
+      });
+
+  </script>
+
+  </body>
+</html>

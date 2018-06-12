@@ -30,16 +30,18 @@ public class Page<T>
   
     public long getTotalPage()  
     {  
+
+        return totalPage;  
+    }  
+  
+    public void setTotalPage(long totalPage)  
+    {  
+    	
         if(totalCount%pageSize==0){  
             totalPage=totalCount/pageSize;  
         }else{  
             totalPage=totalCount/pageSize+1;  
         }  
-        return totalPage;  
-    }  
-  
-    public void setTotalPage(int totalPage)  
-    {  
         if(totalPage<0){  
             totalPage=1;  
         }  

@@ -12,7 +12,8 @@ public interface CourseTimeService {
 	public void delete(CourseTime courseTime);
 
 	public CourseTime getById(String courseTimeId);
-	
-	
+
 	public void saveOrUpdate(CourseTime courseTime);
+	
+	public List<CourseTime> findByCourseId(String courseId);
 }

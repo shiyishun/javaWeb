@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -59,13 +58,6 @@ public class Mark {
 		this.course = course;
 	}
 
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
-	}
 
 	public User getUser() {
 		return user;
@@ -73,14 +65,6 @@ public class Mark {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public String getStuName() {
-		return stuName;
-	}
-
-	public void setStuName(String stuName) {
-		this.stuName = stuName;
 	}
 
 	public Float getDailScore() {

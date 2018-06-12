@@ -60,7 +60,7 @@ public class MarkServiceImpl implements MarkService {
 				" t.user.teachStu.no, t.user.teachStu.name, t.user.teachStu.gender, " +
 				" t.user.teachStu.grade, t.user.teachStu.major, t.user.teachStu.classNo, " +
 		        " t.dailScore, t.examScore, t.finalScore "+
-				" from Mark t where  t.user.teachStu.isTecacher=1 and " +
+				" from Mark t where  t.user.teachStu.isTeacher=1 and " +
 				"(t.user.status=0 or t.user.status=1) and  t.course.courseId ='"+courseId+"'");
 		if(schoolInfoId!=null&&schoolInfoId.trim().equals("")){
 			hql.append(" and t.user.teachStu.schoolInfo.schoolInfoId =:schoolInfoId");

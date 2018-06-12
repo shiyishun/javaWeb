@@ -16,8 +16,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 @Entity
 @Table(name = "tb_course_time")
@@ -29,26 +29,29 @@ public class CourseTime {
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	private String courseTimeId;
 
-	@Column(name="week")
+	@Column(name = "week")
 	private int week;
-	
-	@Column(name="start_period")
+
+	@Column(name = "start_period")
 	private int startPeriod;
-	
-	@Column(name="end_period")
+
+	@Column(name = "end_period")
 	private int endPeriod;
 
 	@Column(name = "class_location")
 	private String classLocation;
-	
+
 	@Column(name = "class_shape")
 	private String classShape;
-	
-	@JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courseTime")  
-    private CourseTimeRel courseTimeRel = new CourseTimeRel();  
-	
-	
+
+	@JSONField(serialize = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courseTime")
+	private Set<UserCourseRel> userCourseRelSet = new HashSet<UserCourseRel>();
+
+	@JSONField(serialize = false)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courseTime")
+	private CourseTimeRel courseTimeRel = new CourseTimeRel();
+
 	public String getCourseTimeId() {
 		return courseTimeId;
 	}
@@ -97,6 +100,16 @@ public class CourseTime {
 		this.classShape = classShape;
 	}
 
+	@JsonIgnore
+	public Set<UserCourseRel> getUserCourseRelSet() {
+		return userCourseRelSet;
+	}
+
+	public void setUserCourseRelSet(Set<UserCourseRel> userCourseRelSet) {
+		this.userCourseRelSet = userCourseRelSet;
+	}
+
+	@JsonIgnore
 	public CourseTimeRel getCourseTimeRel() {
 		return courseTimeRel;
 	}

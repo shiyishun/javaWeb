@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+  </head>
+
+  <body>
+
+      <!--main content start-->
+          <section class="wrapper">
+		  
+		  	<div class="row mt">
+ 
+                  <div class="form-panel">
+                  	  <h4 class="mb"><i class="fa fa-angle-right"></i>首页</h4>
+                      <div class="form-horizontal style-form" >
+                           <div class="form-group">
+						  	 <h5 class="col-sm-4 col-sm-4">用户信息</h5>
+
+                      	   </div>
+
+						  <div class="form-group">
+						      
+                              <label class="col-sm-2 col-sm-2 control-label">用户名：</label>
+                              <p id="userName" class="col-sm-2 col-sm-2 control-label"></p>
+                               <label class="col-sm-2 col-sm-2 control-label">姓名：</label>
+                              <label id="name" class="col-sm-2 col-sm-2 control-label"></label>
+                          </div>
+                          <div class="form-group">
+						       <label class="col-sm-2 col-sm-2 control-label">用户角色：</label>
+                               <label id="roleNames" class="col-sm-2 col-sm-2 control-label"></label>
+							   <label class="col-sm-2 col-sm-2 control-label">学号：</label>
+                               <label id="no" class="col-sm-2 col-sm-2 control-label"></label>
+                          </div>
+						   <div class="form-group">
+						       <label class="col-sm-2 col-sm-2 control-label">手机号码：</label>
+                               <label id="phone" class="col-sm-2 col-sm-2 control-label"></label>
+						       <label class="col-sm-2 col-sm-2 control-label">学校：</label>
+                               <label id="school" class="col-sm-2 col-sm-2 control-label"></label>
+                          </div>
+		                  <div class="form-group">
+                               <label class="col-sm-2 col-sm-2 control-label">地址邮箱：</label>
+                               <label id="email" class="col-sm-2 col-sm-2 control-label"></label>
+		                       <label class="col-sm-2 col-sm-2 control-label">学院：</label>
+                              <label id="colleage" class="col-sm-2 col-sm-2 control-label"></label>
+                          </div>
+						  <div class="form-group"> 
+						  	  <label class="col-sm-4 col-sm-4 control-label"></label>
+                              <label class="col-sm-2 col-sm-2 control-label">系别：</label>
+                              <label id="department" class="col-sm-2 col-sm-2 control-label"></label>
+						  </div>
+                      </div>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+           </div>
+
+		</section><! --/wrapper -->		
+        
+		<script>
+
+         function userInfo(data){
+	           $("#userName").text(data["userName"]);
+			   $("#roleNames").text(data["roleNames"]);
+			   $("#phone").text(data["phone"]);
+			   $("#email").text(data["email"]);
+			   $("#name").text(data["name"]);
+			   $("#no").text(data["no"]);
+			    $("#school").text(data["school"]);
+				$("#colleage").text(data["colleage"]);
+				$("#department").text(data["department"]==null?"":data["department"]);
+	  
+	  
+	     }
+		 
+		 
+		 
+	    $(function(){
+	        $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/user_mng/get_user_info",//url
+                data: '',
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+
+                    if(result.code==0){
+					   userInfo(result.data);
+     
+					}else{
+					    $("#infomsg").text(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    $.alert("访问异常！");
+					return false;  
+                }
+            }); 
+		       
+            $('select.styled').customSelect();
+        });
+         
+		</script>
+		
+	</body>
+</html>

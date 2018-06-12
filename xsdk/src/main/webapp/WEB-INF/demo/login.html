@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <!--external css-->
+    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        
+    <!-- Custom styles for this template -->
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/style-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+      <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+
+	  <div id="login-page">
+	  	<div class="container">
+	  	
+		      <div class="form-login" >
+		        <h2 class="form-login-heading">学生考勤后台管理系统</h2>
+		        <div class="login-wrap">
+		            <input type="text" name="loginName" class="form-control" placeholder="请输入用户名或者手机号">
+		            <br>
+		            <input type="password" name="password" class="form-control" placeholder="请输入密码">
+					<p id="errmsg" class="text-danger"></p>
+		            <button class="btn btn-theme btn-block" onclick="toVaild()"> ><i class="fa fa-lock"></i> 登陆</button>
+		        </div>
+       
+		      </div>	  	
+	  	
+	  	</div>
+	  </div>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery-1.8.3.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/jquery.md5.js"></script>
+  	<script src="assets/js/myfun.js"></script>
+    <!--BACKSTRETCH-->
+    <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+    <script type="text/javascript" src="assets/js/jquery.backstretch.min.js"></script>
+    <script>
+        $.backstretch("assets/img/login_bg.jpg", {speed: 500});
+		 javascript:window.history.forward(1); 
+		
+	   function toVaild(){ 
+	         $("#errmsg").text("");
+			 var loginName = $(":input[name='loginName']").val();
+			 var password = $(":input[name='password']").val();
+			 if(!loginName){
+			     $("#errmsg").text("*登陆名不能为空！");
+				 return false;
+			 }
+			 if(!password){
+			  $("#errmsg").text("*密码不能为空！");
+			  return false;
+			 } 		 
+ 
+             $.ajax({
+			 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/user_mng/login" ,//url
+                data: 'loginName='+loginName+"&"+"password="+password,
+                success: function (result) {
+				
+                    if(result.code==0){
+					     sessionStorage.setItem("token", result.data);  
+						 sessionStorage.setItem("loginName", loginName);  
+					     $(window).attr('location','index.html'); 
+					}else{
+					   $("#errmsg").text("*"+result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+    
+				    $("#errmsg").text("访问异常！");
+					return false;  
+                }
+            }); 
+            
+         
+        }
+
+		
+    </script>
+
+
+  </body>
+</html>
