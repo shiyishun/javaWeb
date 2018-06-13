@@ -110,4 +110,22 @@ public class CallTherollServiceImpl implements CallTherollService {
 		return callTherollDao.getPage(hql.toString(), params, pageNo, pageSize);
 	}
 
+	
+	public List<CallTheroll> findByCouserIdAnd2(String courseId,
+			String courseTimeId, Integer callOrder){
+		
+		String hql = "from CallTheroll c where c.course.courseId=:courseId "
+				+ "and c.courseTime.courseTimeId=:courseTimeId and c.callOrder =:callOrder";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("courseId", courseId);
+		params.put("courseTimeId", courseTimeId);
+		params.put("callOrder", callOrder);
+		return callTherollDao.findList(hql, params);
+
+	}
+	
+	
+
+	
+	
 }

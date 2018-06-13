@@ -15,6 +15,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +25,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.shi.common.ComUtil;
+import com.shi.controller.CallTherollController;
 import com.shi.entity.CallTheroll;
 import com.shi.entity.Course;
 import com.shi.entity.CourseTime;
+import com.shi.entity.Permi;
 import com.shi.entity.TeachStu;
 import com.shi.entity.User;
 import com.shi.entity.UserCourseRel;
@@ -40,6 +45,10 @@ import com.shi.service.UserMngService;
 @RequestMapping(value = "app/teacher/")
 public class TeacherApp {
    
+	private static Logger logger = LogManager
+			.getLogger(TeacherApp.class);
+	
+	
 	@Autowired
 	private UserMngService userService;
 	@Autowired
@@ -50,6 +59,79 @@ public class TeacherApp {
 	private CourseTimeService courseTimeService;
 	@Autowired
 	private UserCourseRelService userCourseRelService;
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "login")
+	public JSONObject login(HttpServletRequest request, HttpServletResponse response,
+			String loginName, String password) {
+		JSONObject json = new JSONObject();
+		try {
+			User user = userService.findByLoginName(loginName);
+			if (user == null||user.getStatus()==2) {
+				json.put("code", "1");
+				json.put("errmsg", "账号不存在");
+				return json;
+			}		
+			if (user.getStatus() == 1) {
+				json.put("code", "1");
+				json.put("errmsg", "账号已被锁定，请联系管理员");
+				return json;
+			}
+
+			String pwd = ComUtil.toMd5Str(password);
+
+			if (!user.getPwd().equals(pwd)) {
+				json.put("code", "2");
+				json.put("errmsg", "密码错误");
+				return json;
+			} 
+			if(user.getTeachStu().getIsTeacher()!=0){	
+				json.put("code", "3");
+				json.put("errmsg", "请输入教师账号");
+				return json;
+			}
+			
+				String token = ComUtil.GetGUID();
+				HashMap<String, Object> userMap = new HashMap<String, Object>();
+				userMap.put("user", user);
+				ComUtil.loginMap.put(token, userMap);
+				json.put("code", "0");
+				json.put("data", token);
+				logger.info("手机用户："+user.getUserName() +"-登陆成功!");
+				return json;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("登陆异常" ,e);
+			json.put("code", "101");
+			json.put("errmsg", "服务异常");
+			return json;
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "logout")
+	public JSONObject logout(HttpServletRequest request) {
+
+		JSONObject json = new JSONObject();;
+		String token = request.getHeader("token");
+		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+		User user = (User) userMap.get("user");
+		ComUtil.loginMap.remove(token);
+		json.put("code", "0");
+		json.put("data", "");
+		logger.info("手机用户："+user.getUserName() +"-退出登陆!");
+		return json;
+	}
+	
+	
+	
 	/**
 	 * 通过用户ID获取所有课程
 	 * @param request
@@ -81,7 +163,7 @@ public class TeacherApp {
 	
 	
 	/**
-	 * 根据课程ID生成签到表
+	 * 根据课程ID,课程时间ID生成签到表
 	 * @param request
 	 * @param response
 	 * @param courseId
@@ -133,7 +215,7 @@ public class TeacherApp {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "find_call_theroll")
-    public JSONObject findCourse(HttpServletRequest request, 
+    public JSONObject findCallTheroll(HttpServletRequest request, 
     		HttpServletResponse response, String courseId, String date){
 		
 		
@@ -165,6 +247,35 @@ public class TeacherApp {
 	
 	
 	
+	/**
+	 * 通过课程ID,课程时间ID，周序获取签到表
+	 * @param request
+	 * @param response
+	 * @param userId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "get_call_theroll")
+    public JSONObject getCallTheroll(HttpServletRequest request, 
+    		HttpServletResponse response, String courseId, String courserTime, String callOrder){
+		
+		
+		JSONObject json = new JSONObject();	
+		Integer callOrderI = null;
+		try{
+		    callOrderI = Integer.valueOf(callOrder);
+		}catch(Exception e){
+			logger.error("周序输入错误" ,e);
+			json.put("code", "22202");
+			json.put("errmsg", "请输入正确的周序");
+			return json;
+		}
+        List<CallTheroll> callTheroll = callTherollService.findByCouserIdAnd2(courseId, courserTime, callOrderI);
+
+		json.put("code", "0");
+		json.put("data", callTheroll);
+		return json;
+	}
 	
 	
 	

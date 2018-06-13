@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="3.0">
 	<display-name>myDemo</display-name>
 	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index</welcome-file>
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>DispatcherServlet</servlet-name>
@@ -19,6 +19,10 @@
 	<servlet-mapping>
 		<servlet-name>DispatcherServlet</servlet-name>
 		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>/index</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>jsp</servlet-name>

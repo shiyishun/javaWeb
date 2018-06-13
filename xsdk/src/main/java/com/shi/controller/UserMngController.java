@@ -187,10 +187,11 @@ public class UserMngController {
 				json.put("data", token);
 				// HttpSession session = request.getSession();
 				// System.out.println(session.getId());
+				logger.info("用户："+user.getUserName() +"-登陆成功!");
 				return json;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(e.toString());
+			logger.error("登陆异常" ,e);
 			json.put("code", "101");
 			json.put("errmsg", "服务异常");
 			return json;
@@ -206,16 +207,19 @@ public class UserMngController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "logout")
-	public JSONObject login(HttpServletRequest request) {
+	public JSONObject logout(HttpServletRequest request) {
 
 		JSONObject json = new JSONObject();
 //		request.getSession().setAttribute("user", null);
 //		request.getSession().setAttribute("permis", null);
 //		request.getSession().setAttribute("noPermis", null);
 		String token = request.getHeader("token");
+		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
+		User user = (User) userMap.get("user");
 		ComUtil.loginMap.remove(token);
 		json.put("code", "0");
 		json.put("data", "");
+		logger.info("用户："+user.getUserName() +"-退出登陆!");
 		return json;
 	}
     /**
@@ -392,7 +396,7 @@ public class UserMngController {
 	    userService.save(user);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(e.toString());
+			logger.error("新增用户失败" ,e);
 			json.put("code", "101");
 			json.put("errmsg", "服务异常");
 			return json;
@@ -501,7 +505,7 @@ public class UserMngController {
 	    userService.update(user);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(e.toString());
+			logger.error("编辑用户信息失败" ,e);
 			json.put("code", "101");
 			json.put("errmsg", "服务异常");
 			return json;

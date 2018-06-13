@@ -54,7 +54,7 @@ public class MarkMngController {
 			markService.genMarkByCourseId(courseId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(e.toString());
+			logger.error("生成成绩表异常");
 			json.put("code", "1122");
 			json.put("errmsg", "生成成绩表异常");	
 			return json;

@@ -20,4 +20,9 @@ public interface CallTherollService {
 	
 	public Page<CallTheroll> getPage(String courseId, String courseTimeId, String  callOrder,
 			String callState,String param, int pageNo, int pageSize);
+	
+	public List<CallTheroll> findByCouserIdAnd2(String courseId,
+			String courseTimeId, Integer callOrder);
+	
+
 }

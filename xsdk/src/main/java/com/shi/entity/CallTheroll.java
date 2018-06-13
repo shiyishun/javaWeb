@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_call_theroll")
@@ -26,16 +27,19 @@ public class CallTheroll {
 	private String callTherollId;
 
 	@JSONField(serialize = false)
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id")
 	private Course course;
 	
 	@JSONField(serialize = false)
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_time_id")
 	private CourseTime courseTime;
 		
 	@JSONField(serialize = false)
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
