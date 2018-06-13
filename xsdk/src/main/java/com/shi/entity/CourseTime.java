@@ -1,15 +1,23 @@
 package com.shi.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_course_time")
@@ -21,18 +29,29 @@ public class CourseTime {
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	private String courseTimeId;
 
-	@Column(name="week")
+	@Column(name = "week")
 	private int week;
-	
-	@Column(name="start_period")
+
+	@Column(name = "start_period")
 	private int startPeriod;
-	
-	@Column(name="end_period")
+
+	@Column(name = "end_period")
 	private int endPeriod;
 
 	@Column(name = "class_location")
 	private String classLocation;
-	
+
+	@Column(name = "class_shape")
+	private String classShape;
+
+	@JSONField(serialize = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courseTime")
+	private Set<UserCourseRel> userCourseRelSet = new HashSet<UserCourseRel>();
+
+	@JSONField(serialize = false)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courseTime")
+	private CourseTimeRel courseTimeRel = new CourseTimeRel();
+
 	public String getCourseTimeId() {
 		return courseTimeId;
 	}
@@ -71,6 +90,32 @@ public class CourseTime {
 
 	public void setClassLocation(String classLocation) {
 		this.classLocation = classLocation;
+	}
+
+	public String getClassShape() {
+		return classShape;
+	}
+
+	public void setClassShape(String classShape) {
+		this.classShape = classShape;
+	}
+
+	@JsonIgnore
+	public Set<UserCourseRel> getUserCourseRelSet() {
+		return userCourseRelSet;
+	}
+
+	public void setUserCourseRelSet(Set<UserCourseRel> userCourseRelSet) {
+		this.userCourseRelSet = userCourseRelSet;
+	}
+
+	@JsonIgnore
+	public CourseTimeRel getCourseTimeRel() {
+		return courseTimeRel;
+	}
+
+	public void setCourseTimeRel(CourseTimeRel courseTimeRel) {
+		this.courseTimeRel = courseTimeRel;
 	}
 
 }

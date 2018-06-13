@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+  </head>
+
+  <body>
+
+      <!--main content start-->
+          <section class="wrapper">
+  
+          	<!-- BASIC FORM ELELEMNTS -->
+          	<div class="row mt">
+                  <div class="form-panel">
+                  	  <h4 class="mb" id='titleShow'><i class="fa fa-angle-right"></i></h4>
+                      <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                               <input id="schoolInfoId" type="text"  class="hidden"">					 
+                          </div>
+		                  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*学校编号</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="schoolNo" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg1" class="text-danger"></p>
+                          </div>
+						  
+		                  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*学校名称</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="school" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg2" class="text-danger"></p>
+                          </div>
+						   <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*学院</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="college" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg3" class="text-danger"></p>
+                          </div>
+					      <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">系别</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="department" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg4" class="text-danger"></p>
+                          </div>
+						    
+						  <div class="form-group"> 
+						    <div class="col-sm-2">
+						      <button onclick="ensure()" class="btn btn-theme">确定</button>
+							  <button onclick="backPage();" class="btn btn-theme">返回</button>
+						    </div>
+
+						  </div>
+                      </div>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+          	</div>
+          </section>
+
+
+      
+  <script>
+ 
+      function validateSchoolNo(){
+        
+		  if($("#schoolNo").val().length<1){
+		   
+		       $("#errmsg1").text("*学校编号不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg1").text("");
+			   return true;
+		  }
+	  }
+	     
+	 function validateSchoolName(){
+        
+		  if($("#school").val().length<1){
+		   
+		       $("#errmsg2").text("*学校名称不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg2").text("");
+			   return true;
+		  }
+	  }
+		 
+	function validateCollege(){
+		 if($("#college").val().length<1){
+		   
+		       $("#errmsg3").text("*学院不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg3").text("");
+			   return true;
+		  }
+	  }
+			  
+			  
+	  $("#schoolNo").blur(  function(){
+         
+		 validateSchoolNo();
+		 
+      }); 
+		 
+	  $("#school").blur(  function(){
+         
+		 validateSchoolName();
+		 
+      }); 
+	  
+	  
+	  $("#college").blur(  function(){
+         
+		 validateCollege();
+		 
+      }); 
+	  
+	  
+	  var isAdd = true;
+	  function fullData(){
+	     
+	     var schoolInfoId = sessionStorage.getItem("schoolInfoId"); 
+	        
+	     if(schoolInfoId!=""&&schoolInfoId!="null"){
+         
+			  isAdd = false;
+			  $("#titleShow").text("校园管理->编辑");
+			  sessionStorage.setItem("schoolInfoId",""); 
+		      $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/school_mng/get",//url
+                data: 'schoolInfoId='+schoolInfoId,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				  
+                    if(result.code==0){
+					    var data = result.data;
+				
+					   $("#schoolInfoId").val(data["schoolInfoId"]);
+					   $("#school").val(data["school"]);
+					   $("#college").val(data["college"]);
+					   $("#schoolNo").val(data["schoolNo"]);
+					    $("#department").val(data["department"]);
+
+					   
+					}else{
+					    alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+		 
+		 }else{
+		     $("#titleShow").text("校园管理->添加");
+
+		 }
+	  
+	  
+	  }
+	  
+	  
+
+
+	  
+	  function ensure(){
+	  
+               
+			   if(!(validateSchoolNo()&&validateSchoolName()&&validateCollege())){
+			   
+			     return false;
+			   }
+	  
+	            var schoolInfo = {schoolInfoId: $("#schoolInfoId").val(),  school: $("#school").val(), college: $("#college").val(),
+  				   schoolNo: $("#schoolNo").val(),   department: $("#department").val()}
+	  
+	  
+	         	$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/school_mng/save",//url
+                data: schoolInfo,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					          var  schoolInfomsg = isAdd?"*学校信息添加成功": "*学校信息编辑成功";
+	                           sessionStorage.setItem("schoolInfomsg", schoolInfomsg); 
+					           $('#main-content').load('school_mng.html'); 
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    $.alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	        function backPage(){
+
+			   $('#main-content').load('school_mng.html'); 
+            }	
+   
+	     
+      $(function(){
+	      
+          $('select.styled').customSelect();
+		   fullData();
+		  
+      });
+
+  </script>
+
+  </body>
+</html>

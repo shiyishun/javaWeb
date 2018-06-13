@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 @Entity
 @Table(name = "tb_call_theroll")
 public class CallTheroll {
@@ -23,22 +25,23 @@ public class CallTheroll {
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	private String callTherollId;
 
+	@JSONField(serialize = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id")
 	private Course course;
 	
-	@Column(name="course_name")
-	private String courseName;
-	
+	@JSONField(serialize = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "course_time_id")
+	private CourseTime courseTime;
+		
+	@JSONField(serialize = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(name="stu_no")
-	private String stuNo;
-	
-	@Column(name="stu_name")
-	private String stuName;
+	@Column(name="call_order")
+	private int callOrder;
 	
 	@Column(name="call_state")
 	private int callState;
@@ -65,12 +68,13 @@ public class CallTheroll {
 		this.course = course;
 	}
 
-	public String getCourseName() {
-		return courseName;
+
+	public CourseTime getCourseTime() {
+		return courseTime;
 	}
 
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
+	public void setCourseTime(CourseTime courseTime) {
+		this.courseTime = courseTime;
 	}
 
 	public User getUser() {
@@ -82,20 +86,12 @@ public class CallTheroll {
 	}
 
 
-	public String getStuNo() {
-		return stuNo;
+	public int getCallOrder() {
+		return callOrder;
 	}
 
-	public void setStuNo(String stuNo) {
-		this.stuNo = stuNo;
-	}
-
-	public String getStuName() {
-		return stuName;
-	}
-
-	public void setStuName(String stuName) {
-		this.stuName = stuName;
+	public void setCallOrder(int callOrder) {
+		this.callOrder = callOrder;
 	}
 
 	public int getCallState() {

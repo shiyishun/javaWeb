@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+
+  </head>
+
+  <body>
+
+
+        <section class="wrapper">
+         
+              <div class="row mt">
+			  
+                  <div class="col-md-12">
+                      
+                      <div class="content-panel">
+					  <h4 class="mb" id='titleShow'><i class="fa fa-angle-right"></i>课程时间查询</h4>
+					     <div class="form-horizontal style-form" >
+                          <div class="form-group">
+						      <div class="col-sm-2">
+							      <p id="infomsg" class="col-sm-2 control-label"></p>
+                              </div>
+							  <div class="col-sm-5"></div>
+                              <div class="col-sm-3">
+                                 <select id="courseId" class="form-control"  title="请选择要查询的课程">
+						          <option value="" >*请选择要查询的课程</option>
+								 </select>
+                              </div>	
+							  <div class="col-sm-1">
+							       <button class="btn btn-theme" onclick="search()">查询</button> 
+							  </div>
+							  
+                          </div>
+						  </div>
+                          <table class="table table-striped table-advance table-hover">
+	                  	
+	                  	  	  <hr>
+                              <thead>
+                                <tr>
+                                  <th width="20%">星期</th>
+                                  <th width="10%">开始节数</th>
+                                  <th width="10%">结束节数</th>
+                                  <th width="30%">上课地点</th>
+								  <th width="20%">教室格局</th>
+                                  <th width="10%">操作</th>
+                              </tr>
+                              </thead>
+                              <tbody id="list-wrap">
+                  
+                              </tbody>
+                          </table>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+        <div class="ui-page" id="ui-page"></div>
+		</section><! --/wrapper -->
+    <!--script for this page-->
+    
+  <script>
+      currentPage=1;
+	  pageSize = 10;
+      totalPage = 0;        
+	  totalCount = 0;
+      function prePage(){
+      	currentPage--;
+      	sendAjax(currentPage, pageSize);
+      }
+      function nextPage(){
+      	currentPage++;
+      	sendAjax(currentPage, pageSize);
+      }
+	  
+	  function reqestData(page, pageSize, isInit, ifPaging){
+	    
+	       var courseId = $('#courseId').val();
+		  
+		  if(isInit){
+		    courseId = sessionStorage.getItem("courseId"); 		       			
+			sessionStorage.setItem("courseId", ""); 
+		    loadSelect(courseId); 
+		  }
+		
+		  
+	      $.ajax({
+			 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_time_mng/page" ,//url
+                data: 'courseId='+courseId+'&'+'no='+page+'&'+'size='+pageSize,
+				 headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+	            xhrFields: {
+                  withCredentials: true
+                },
+                success: function (result) {
+				
+                    if(result.code==0){
+					    loadData(result);
+						 
+						 if(ifPaging){
+                          totalPage = result.data.totalPage;        
+	                      pageSize = result.data.pageSize;
+						  totalCount = result.data.totalCount;
+                          $("#ui-page").paging({pageNum:3,totalPage:totalPage,pageSize:pageSize,totalCount:totalCount});
+						}
+					}else{					
+					   $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+                     $.alert("访问异常！");
+				
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	 function search(){
+
+		  reqestData(1, pageSize, false ,true);
+		 
+      }	
+	  	  
+	  function del(courseTimeId){
+	  
+	    $.confirm({
+                title: '删除',
+                content: '是否删除该记录',
+                confirm: function(){
+          
+	             $.ajax({
+			 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_time_mng/del" ,//url
+                data: 'courseTimeId='+courseTimeId,
+				headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+	            xhrFields: {
+                  withCredentials: true
+                },
+                success: function (result) {
+				
+                    if(result.code==0){
+	                   
+					   reqestData(currentPage, pageSize, false, true)
+					}else{					
+					   $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+                     $.alert("访问异常！");
+				
+                }
+            }); 
+	  
+                },
+                cancel: function(){
+                  
+                }
+          })
+        }
+	  
+	  
+	  
+	  function loadData(result){
+	      var list = result.data.list;
+
+		  var dictWeek = result.dict.星期;
+           $("tbody").empty();
+	      for (var i = 0; i < list.length; i++) {  
+		          var courseTimeId = list[i]['courseTimeId'];
+				   var week = dictWeek[list[i]['week']];
+				  var startPeriod = list[i]['startPeriod'];
+				  
+				  var endPeriod = list[i]['endPeriod'];
+				  var classLocation = list[i]["classLocation"];
+                  var classShape = list[i]["classShape"]==null?"":list[i]["classShape"];
+
+
+ 
+
+	              var tr = $("<tr></tr>");
+
+                  tr.html('<td>'+week+'</td><td>'+startPeriod+'</td><td>'+endPeriod+'</td><td>'+classLocation+'</td><td>'+classShape+'</td>' 
+				  +'<td><button onclick="edit(\''+courseTimeId+'\')"title="编辑" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>'
+				  +'<button onclick="del(\''+courseTimeId+'\')" title="删除" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button></td>'
+				  );
+              
+                  $("tbody").append(tr);
+				 
+	      }
+	  }
+	  
+	    /* ajax 请求更新数据 */
+      function sendAjax(page, size){
+ 	   reqestData(page, pageSize, false, false);
+      }
+
+	  
+	  
+	  function add(){
+
+           sessionStorage.setItem("courseTimeId", ""); 
+	       $('#main-content').load('course_time_edit.html'); 
+	  }
+	  
+	  function edit(courseTimeId){
+	       sessionStorage.setItem("courseTimeId", courseTimeId); 
+		   
+	       $('#main-content').load('course_time_edit.html'); 
+	  
+	  }
+	  
+	  function del(courseTimeId){
+	  
+	    $.confirm({
+                title: '删除',
+                content: '是否删除该记录？',
+                confirm: function(){
+                    
+			    $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_time_mng/del",//url
+                data: "courseTimeId="+courseTimeId,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					          var  courseTimeMsg = "*删除成功";
+	                           sessionStorage.setItem("courseTimeMsg", courseTimeMsg); 
+					           $('#main-content').load('course_time_mng.html'); 
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    $.alert("访问异常！");
+					return false;  
+                }
+              }); 
+					
+                },
+                cancel: function(){
+                 
+                }
+          })
+        }
+	  
+	  
+	  	  
+	  function loadSelect(value){
+	  
+	        $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_mng/list",//url
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  var data = result.data;
+					  courseList  = result.data;
+					  $.each(data, function (i, item) {
+                        $("#courseId").append("<option value='"+item.courseId+"'>"+item.courseName+"</option>");
+					    
+					  })
+					  
+					   if(value!=null&&value!=""){
+					     $("#courseId").val(value);
+					   }
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  }
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+      $(function(){
+	  
+	      reqestData(1, pageSize, true, true);
+	  
+          $('select.styled').customSelect();
+      });
+
+  </script>
+
+  </body>
+</html>

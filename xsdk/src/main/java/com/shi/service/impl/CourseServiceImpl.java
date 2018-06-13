@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.shi.common.DictUtil;
+import com.shi.common.Page;
 import com.shi.dao.CourseDao;
 import com.shi.entity.Course;
 import com.shi.entity.CourseTimeRel;
@@ -73,4 +74,37 @@ public class CourseServiceImpl implements CourseService {
 		return courseDao.getById(courseId);
 	}
 
+	
+	public Page<Course> getPage(String userId, String param, int pageNo, int pageSize){
+		
+		StringBuffer hql = new StringBuffer("select c from Course c , UserCourseRel ucr " +
+				"where c.courseId=ucr.course.courseId " +
+				"and ucr.user.userId='"+userId+"'");
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(param!=null&&!param.trim().equals("")){
+			hql.append(" and c.courseName like:courseName");
+			params.put("courseName", "%"+param+"%");
+		}
+		hql.append(" order by c.courseNo asc");
+		return courseDao.getPage(hql.toString(), params, pageNo, pageSize);
+		
+	}
+	
+
+	public void saveOrUpdate(Course course){
+		if(course.getCourseId()!=null&&"".equals(course.getCourseId().trim())){
+			course.setCourseId(null);
+		}
+		courseDao.saveOrUpdate(course);
+	}
+	
+	public List<Course> findByUserId(String userId){
+		
+		StringBuffer hql = new StringBuffer("select c from Course c , UserCourseRel ucr " +
+				"where c.courseId=ucr.course.courseId " +
+				"and ucr.user.userId='"+userId+"'");
+		hql.append(" order by c.courseNo asc");
+		return courseDao.findList(hql.toString());
+		
+	}
 }

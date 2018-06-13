@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+  </head>
+
+  <body>
+
+      <!--main content start-->
+          <section class="wrapper">
+  
+          	<!-- BASIC FORM ELELEMNTS -->
+          	<div class="row mt">
+                  <div class="form-panel">
+                  	  <h4 class="mb" id='titleShow'><i class="fa fa-angle-right"></i></h4>
+                      <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                               <input id="userId" type="text"  class="hidden"">					 
+                          </div>
+						  <div id='userNoDiv' class="form-group" hidden>
+                              <label class="col-sm-2 col-sm-2 control-label">用户编号</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="userNo" class="form-control" placeholder="">
+                              </div>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*用户名</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="userName" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg1" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">*手机号码</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="phone" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg2" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">电子邮箱</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="email" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg3" class="text-danger"></p>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">角色</label>
+                              <div class="col-sm-4">
+                                 <select id="roleId" class="form-control">
+								   <option value=''></option>
+						         </select>
+                              </div>						 
+                          </div>
+
+						   <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">学号</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="no" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg4" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">姓名</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="name" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg5" class="text-danger"></p>
+                          </div>
+						   <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">性别</label>
+                              <div class="col-sm-4">
+                                 <select id="gender" class="form-control">
+						         </select>
+                              </div>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">生日</label>
+                              <div class="col-sm-4">
+                                  <input class="Wdate form-control" type="text" id="birthday" style="height: 34px"
+                                              onFocus="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd'})" />
+                              </div>
+							  <p id="errmsg6" class="text-danger"></p>
+                          </div>
+						   <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">学校</label>
+                              <div class="col-sm-4">
+                                 <select id="schoolInfoId" class="form-control">
+						         </select>
+                              </div>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">年级</label>
+                              <div class="col-sm-4">
+                                  <input class="Wdate form-control" type="text" id="grade" style="height: 34px"
+                                              onFocus="WdatePicker({isShowClear:true,dateFmt:'yyyy级'})" />
+                              </div>
+		
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">专业</label>
+                              <div class="col-sm-4">
+                                  <input type="text" id="major" class="form-control" placeholder="">
+                              </div>
+							  <p id="errmsg7" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">班级</label>
+                              <div class="col-sm-4">
+                                 <select id="classNo" class="form-control">
+						         </select>
+                              </div>
+							  <p id="errmsg5" class="text-danger"></p>
+                          </div>
+						  <div class="form-group">
+                              <label class="col-sm-2 col-sm-2 control-label">用户状态</label>
+                              <div class="col-sm-4">
+                                 <select id="status" class="form-control">
+						         </select>
+                              </div>
+                          </div>
+						  <div class="form-group"> 
+						    <div class="col-sm-2">
+						      <button onclick="ensure()" class="btn btn-theme">确定</button>
+							  <button onclick="backPage();" class="btn btn-theme">返回</button>
+						    </div>
+
+						  </div>
+                      </div>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+          	</div>
+          </section>
+
+
+      
+  <script>
+ 
+      function validateUserName(){
+        
+		  if($("#userName").val().length<1){
+		   
+		       $("#errmsg1").text("*用户名不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg1").text("");
+			   return true;
+		  }
+	  }
+	     
+	 function validatePhone(){
+        
+		  if($("#phone").val().length<1){  
+		       $("#errmsg2").text("*手机号码不能为空");
+			   return false;
+		  }else{
+		       $("#errmsg2").text("");
+			   return true;
+		  }
+		  /*
+		  var reg = /^1[3|4|5|7|8][0-9]{9}$/;
+		  var flag = reg.test($("#phone").val()); //true
+		  if(!flag){
+		  	   $("#errmsg2").text("*手机号码格式错误");
+			   return false;
+		  }
+		  */
+	  }
+		 
+			  
+	  $("#userName").blur(  function(){
+         
+		 validateUserName();
+		 
+      }); 
+		 
+	  $("#phone").blur(  function(){
+         
+		 validatePhone();
+		 
+      }); 
+	  
+	  var isAdd = true;
+	  function fullData(){
+	     
+		  loadCategory();
+	     var userId = sessionStorage.getItem("userId"); 
+	        
+	     if(userId!=""&&userId!="null"){
+              
+			  isAdd = false;
+			  $("#titleShow").text("用户管理->编辑");
+			  sessionStorage.setItem("userId",""); 
+		      $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/user_mng/get",//url
+                data: 'userId='+userId,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				  
+                    if(result.code==0){
+					    var data = result.data;
+			
+					   $("#userId").val(data["userId"]);
+					   $("#userNo").val(data["userNo"]);
+		               $("#userName").val(data["userName"]);
+			           $("#roleId").val(data["roleIds"]);
+			           $("#phone").val(data["phone"]);
+			           $("#email").val(data["email"]);
+					   $("#status").val(data["status"]);
+					   
+			           $("#name").val(data["name"]);
+			           $("#no").val(data["no"]);
+			           $("#schoolInfoId").val(data["school"]);
+				       $("#major").val(data["major"]);
+					   $("#grade").val(data["grade"]);
+				       $("#classNo").val(data["classNo"]);
+					   $("#birthday").val(data["birthday"]);
+					   
+					   $("#userNoDiv").show();
+					   $("#userNo").attr("disabled","disabled");
+					   $("#userName").attr("disabled","disabled");
+					}else{
+					    alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+		 
+		 }else{
+		     $("#titleShow").text("用户管理->添加");
+		    
+		 }
+	  
+	  
+	  }
+	  
+	  
+	  function loadCategory(){
+	 
+	        $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/dict_mng/findl",//url
+                data: 'params=性别,班级,用户状态',
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  var data = result.data;
+					  if(data.性别 != null)
+					  $.each(data.性别, function (i, item) {
+					    
+                        $("#gender").append("<option value='"+item.dictValue+"'>"+ item.dictName+"</option>");
+					
+					  })
+					  if(data.班级 != null)
+					  $.each(data.班级, function (i, item) {
+					    
+                        $("#classNo").append("<option value='"+item.dictValue+"'>"+ item.dictName+"</option>");
+					
+					  })
+					  if(data.用户状态 != null)
+					  $.each(data.用户状态, function (i, item) {
+					    
+                        $("#status").append("<option value='"+item.dictValue+"'>"+ item.dictName+"</option>");
+					
+					  })
+					  
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+	 	  
+		  
+		  	$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/school_mng/finda",//url
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  var data = result.data;
+					  $.each(data, function (i, item) {
+					    var department = item.department==null?"":item.department;
+                        $("#schoolInfoId").append("<option value='"+item.schoolInfoId+"'>"+item.schoolNo + "  " + item.school
+						+ "  " + item.college + "  " + department +"</option>");
+					
+					  })
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+		  
+		  	  $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/role_mng/finda",//url
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  var data = result.data;
+					  $.each(data, function (i, item) {
+					 
+                        $("#roleId").append("<option value='"+item.roleId+"'>"+item.roleName + "</option>");
+					
+					  })
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+		  
+		  
+	  }
+
+	  
+	  function ensure(){
+	  
+               
+			   if(!(validateUserName()&&validatePhone())){
+			   
+			     return false;
+			   }
+	            
+			    reqUrl = isAdd?urlBase+"/user_mng/save":urlBase+"/user_mng/edit";
+				 
+	            var userStr = 'userId='+$("#userId").val()+'&userName='+$("#userName").val()+'&phone='+$("#phone").val()+'&email=' +$("#email").val()+ "&status="+$("#status").val();
+	             userStr += "&roleId="+$("#roleId").val()+"&no="+$("#no").val()+"&name="+$("#name").val()+"&gender="+$("#gender").val()+"&birthday="+$("#birthday").val();
+				 userStr += "&schoolInfoId="+$("#schoolInfoId").val()+"&grade="+$("#grade").val()+"&major="+$("#major").val()+"&classNo="+$("#classNo").val();
+	  
+	         	$.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: reqUrl,
+                data: userStr,
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					          var  userInfomsg = isAdd?"*用户添加成功": "*用户编辑成功";
+	                           sessionStorage.setItem("userInfomsg", userInfomsg); 
+					           $('#main-content').load('user_mng.html'); 
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    $.alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	        function backPage(){  
+
+			   $('#main-content').load('user_mng.html'); 
+            }	
+   
+	     
+	  //custom select box
+      $(function(){
+	      
+          $('select.styled').customSelect();
+		   fullData();
+		  
+      });
+
+  </script>
+
+  </body>
+</html>

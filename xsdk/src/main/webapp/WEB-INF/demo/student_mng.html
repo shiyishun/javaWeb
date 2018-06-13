@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+
+  </head>
+
+  <body>
+
+
+        <section class="wrapper">
+         
+              <div class="row mt">
+			  
+                  <div class="col-md-12">
+                      
+                      <div class="content-panel">
+					  <h4 class="mb"><i class="fa fa-angle-right"></i>学生管理</h4>
+					     <div class="form-horizontal style-form" >
+                          <div class="form-group">
+                               <div class="col-sm-3">
+							      <p id="infomsg" class="col-sm-2 control-label"></p>
+                              </div>               
+                              <div class="col-sm-2">
+                                 <select id="classNo" class="form-control"  title="请选择要查询的班级">
+						          <option value="" >请选择要查询的班级</option>
+								 </select>
+                              </div>
+              						  
+                              <div class="col-sm-2">
+                                  <input class="Wdate form-control" type="text" id="grade" style="height: 34px" placeholder="请选择要查询的年级"
+                                              onFocus="WdatePicker({isShowClear:true,dateFmt:'yyyy级'})" />
+                              </div>
+
+                              <div class="col-sm-3">
+                                  <input id='param' type="text" class="form-control"  placeholder="请输入查询的学生姓名或者学号">
+                              </div>
+							  <div class="col-sm-2">
+							       <button class="btn btn-theme" onclick="search()">查询</button> 
+							  </div>
+
+                          </div>
+						  </div>
+                          <table class="table table-striped table-advance table-hover">
+	                  	 
+	                  	  	  <hr>
+                              <thead>
+                                <tr>
+                                  <th width="15%">学号</th>
+                                  <th width="15%">姓名</th>
+                                  <th width="10%">性别</th>
+                                  <th width="15%">年级</th>
+								  <th width="15%">专业</th>
+								  <th width="10%">班级</th>
+								  <th width="10%">生日</th>
+                                  <th width="10%">操作</th>
+                              </tr>
+                              </thead>
+                              <tbody id="list-wrap">
+                  
+                              </tbody>
+                          </table>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+        <div class="ui-page" id="ui-page"></div>
+		</section><! --/wrapper -->
+    <!--script for this page-->
+    
+  <script>
+      currentPage=1;
+	  pageSize = 10;
+      totalPage = 0;        
+	  totalCount = 0;
+
+      function prePage(){
+      	currentPage--;
+      	sendAjax(currentPage, pageSize);
+      }
+      function nextPage(){
+      	currentPage++;
+      	sendAjax(currentPage, pageSize);
+      }
+	  
+	  function reqestData(page, pageSize, isInit, ifPaging){
+	    
+	      var param = $('#param').val();
+		  var classNo = $('#classNo').val();
+		  var grade = $('#grade').val();
+	      $.ajax({
+			 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/student_mng/page" ,//url
+                data: 'grade='+grade+'&classNo='+classNo+'&param='+param+'&'+'no='+page+'&'+'size='+pageSize,
+				 headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+	            xhrFields: {
+                  withCredentials: true
+                },
+                success: function (result) {
+				
+                    if(result.code==0){
+					 					  
+					    loadData(result.data);
+						if(isInit){
+						  if(result.dict.班级 != null)
+					        $.each(result.dict.班级, function (i, item) {
+					    
+                            $("#classNo").append("<option value='"+item.dictValue+"'>"+ item.dictName+"</option>");
+					       
+					      })
+						 }
+						 
+						 if(ifPaging){
+						 
+                          totalPage = result.data.totalPage;        
+	                      pageSize = result.data.pageSize;
+						  totalCount = result.data.totalCount;
+                          $("#ui-page").paging({pageNum:3,totalPage:totalPage,pageSize:pageSize,totalCount:totalCount});
+						 
+						 }
+						 
+						 
+		
+					
+					
+				    }else{					
+					   $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+                     $.alert("访问异常！");
+				
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	  
+	  	  
+	  function search(){
+	      reqestData(1, pageSize, false, true);
+	  }
+	  
+
+	  
+	  function loadData(data){
+	      var list = data.list;
+          $("tbody").empty();
+	      for (var i = 0; i < list.length; i++) {  
+		          var teachStuId = list[i]['teachStuId'];
+				  var no = list[i]['no'];
+				  var name = list[i]['name'];
+				  var gender = list[i]['genderStr'];
+				  var grade = list[i]["grade"];
+				  var major = list[i]["major"];
+				  var classNo = list[i]["classNoStr"];
+                  var birthday = list[i]["birthday"]!=null?fmtDate(list[i]["birthday"]):"";
+
+	              var tr = $("<tr></tr>");
+
+                  tr.html('<td>'+no+'</td><td>'+name +'</td>' 
+				  +'<td>'+gender+'</td><td>'+grade+'</td><td>'+major+'</td><td>'+classNo+'</td><td>'+birthday+'</td>'
+				  +'<td><button onclick="edit(\''+teachStuId+'\')"title="编辑" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>'
+				  );
+              
+                  $("tbody").append(tr);
+				 
+	      }
+	  }
+	  
+	    /* ajax 请求更新数据 */
+      function sendAjax(page, size){
+ 	   reqestData(page, pageSize, false, false);
+      }
+
+	  
+	  
+	  function add(){
+           sessionStorage.setItem("teachStuId", ""); 
+	       $('#main-content').load('student_edit.html'); 
+	  }
+	  
+	  function edit(teachStuId){
+	       sessionStorage.setItem("teachStuId", teachStuId); 
+	      // $('#main-content').load('student_edit.html'); 
+	  
+	  }
+	  
+	  function del(teachStuId){
+	  
+	    $.confirm({
+                title: '删除',
+                content: '是否删除该记录？',
+                confirm: function(){
+                     $.alert("暂不支持删除");
+                },
+                cancel: function(){
+                 
+                }
+          })
+        }
+	  
+      $(function(){
+	  
+	      reqestData(1, pageSize, true, true);
+	  
+          var teachStuInfomsg = sessionStorage.getItem("studentInfomsg");
+
+		  if(teachStuInfomsg!=""&&teachStuInfomsg!=null){
+		      $('#infomsg').text(teachStuInfomsg); 
+			  sessionStorage.setItem("studentInfomsg", ""); 
+		  }else{
+		  
+		      $('#infomsg').text("");
+		  }
+	  
+          $('select.styled').customSelect();
+      });
+
+  </script>
+
+  </body>
+</html>

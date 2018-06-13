@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>DASHGUM - Bootstrap Admin Template</title>
+
+  </head>
+
+  <body>
+
+
+        <section class="wrapper">
+         
+              <div class="row mt">
+			  
+                  <div class="col-md-12">
+                      
+                      <div class="content-panel">
+					  <h4 class="mb"><i class="fa fa-angle-right"></i>考勤查询</h4>
+					     <div class="form-horizontal style-form" >
+                          <div class="form-group">
+  
+                              <div class="col-sm-2">
+                                 <select id="courseId" class="form-control"  title="请选择要查询的课程">
+						          <option value="" >*请选择要查询的课程</option>
+								 </select>
+                              </div>	
+                               <div class="col-sm-2">
+                                 <select id="courseTimeId" class="form-control"  title="请选择要查询的课程时间">
+						          <option value="" >*请选择要查询的课程时间</option>
+								 </select>
+                              </div>							  
+                              <div class="col-sm-2">
+                                  <input id='callOrder' type="text" class="form-control"  placeholder="*请输入查询的周序"  title="请输入查询的周序">
+                              </div>
+                               <div class="col-sm-2">
+                                 <select id="callState" class="form-control"  title="请选择要查询的签到状态">
+						          <option value="" >请选择要查询的签到状态</option>
+								 </select>
+                              </div>	
+								
+                              <div class="col-sm-3">
+                                  <input id='param' type="text" class="form-control"  placeholder="请输入查询的学生姓名或者学号" title="请输入查询的学生姓名或者学号">
+                              </div>
+							  <div class="col-sm-1">
+							       <button class="btn btn-theme" onclick="search()">查询</button> 
+							  </div>
+
+                          </div>
+						  </div>
+                          <table class="table table-striped table-advance table-hover">
+	                  	 
+	                  	  	  <hr>
+                              <thead>
+                                <tr>
+                                  <th width="10%">学号</th>
+                                  <th width="10%">姓名</th>
+                                  <th width="10%">性别</th>
+                                  <th width="10%">年级</th>
+								  <th width="10%">专业</th>
+								  <th width="10%">班级</th>
+								  <th width="20%">签到时间</th>
+								  <th width="20%">签到状态</th>
+                               
+                              </tr>
+                              </thead>
+                              <tbody id="list-wrap">
+                  
+                              </tbody>
+                          </table>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+        <div class="ui-page" id="ui-page"></div>
+		</section><! --/wrapper -->
+    <!--script for this page-->
+    
+  <script>
+      currentPage=1;
+	  pageSize = 10;
+      totalPage = 0;        
+	  totalCount = 0;
+
+      function prePage(){
+      	currentPage--;
+      	sendAjax(currentPage, pageSize);
+      }
+      function nextPage(){
+      	currentPage++;
+      	sendAjax(currentPage, pageSize);
+      }
+	  
+	  function reqestData(page, pageSize, isInit, ifPaging){
+	      
+		  
+
+		  var callOrder = $('#callOrder').val();
+		  var callState = $('#callState').val();
+	      var param = $('#param').val();
+		  var courseId = $('#courseId').val();
+		  var courseTimeId = $('#courseTimeId').val();
+		  
+		  if(isInit){
+		    courseId  = sessionStorage.getItem("courseId"); 
+		    courseTimeId = sessionStorage.getItem("courseTimeId"); 
+		    callOrder = sessionStorage.getItem("callOrder");
+		  
+		       
+			sessionStorage.setItem("courseId", ""); 
+			sessionStorage.setItem("courseTimeId", ""); 
+			sessionStorage.setItem("callOrder", ""); 
+		  
+		  
+		   $('#callOrder').val(callOrder);
+		   loadSelect(courseId); 
+		   loadSelect2(courseId, courseTimeId);
+		  }
+	    
+	      $.ajax({
+			 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/call_theroll/page" ,//url
+                data: '&courseId='+courseId+'&courseTimeId='+courseTimeId+'&callOrder='+callOrder+'&callState='+callState+'&param='+param+'&'+'no='+page+'&'+'size='+pageSize,
+				 headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+	            xhrFields: {
+                  withCredentials: true
+                },
+                success: function (result) {
+				
+                    if(result.code==0){
+					 					  
+					    loadData(result);
+						if(isInit){
+						  if(result.dictList.签到状态 != null)
+					        $.each(result.dictList.签到状态, function (i, item) {
+					    
+                            $("#callState").append("<option value='"+item.dictValue+"'>"+ item.dictName+"</option>");
+					        
+					      })
+
+						 }
+						 if(ifPaging){
+						  if(result.data==null)
+						     return ;
+                          totalPage = result.data.totalPage;        
+	                      pageSize = result.data.pageSize;
+						  totalCount = result.data.totalCount;
+                          $("#ui-page").paging({pageNum:3,totalPage:totalPage,pageSize:pageSize,totalCount:totalCount});
+						 
+						 }
+					
+					
+				    }else{					
+					   $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+                     $.alert("访问异常！");
+				
+                }
+            }); 
+	  
+	  
+	  }
+	  
+	  $("select#courseId").change(function(){
+            var courseId = $('#courseId').val();
+		   
+		    loadSelect2(courseId);
+       });
+	  	  
+	  function loadSelect2(courseId, courseTimeId){
+
+         $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_mng/t_list",//url
+                data: "courseId="+courseId,
+ 			    headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				    $("#courseTimeId").empty();
+					 $("#courseTimeId").append("<option value=''>*请选择要查询的课程时间</option>");
+                    if(result.code==0){
+					  var data = result.data;
+                      var dictWeek = result.dict.星期;
+					  
+					  $.each(data, function (i, item) {
+					    var str = dictWeek[item.week] +" " + item.startPeriod + "-" + item.endPeriod+"节";
+                        $("#courseTimeId").append("<option value='"+item.courseTimeId+"'>"+str+"</option>");
+					    
+					  })
+					  
+					  if(courseTimeId!=null&&courseTimeId!=""){
+					     $("#courseTimeId").val(courseTimeId);
+					   }
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            });  
+
+      }	  
+		  
+		  
+		  
+	  function search(){
+	  	  var callOrder = $('#callOrder').val();
+		  var courseId = $('#courseId').val();
+		  var courseTimeId = $('#courseTimeId').val();
+
+		  if(courseId==""){
+		    $.dialog({
+             title: '提示',
+             content: '请选择要查询的课程!',
+            });
+			return;
+		  }
+		  if(courseTimeId==""){
+		    $.dialog({
+             title: '提示',
+             content: '请选择要查询的课程时间!',
+            });
+			return;
+		  }
+		 if(callOrder==""){
+		    $.dialog({
+             title: '提示',
+             content: '请输入查询的周序!',
+            });
+			return;
+		  }
+	      reqestData(1, pageSize, false, true);
+		 
+	  }
+	  
+
+	  
+	  function loadData(result){
+	      if(result.data ==null)
+		  {
+		    return;
+		  }
+	      var list = result.data.list;
+		  var dictGender = result.dict.性别;
+		  var dictClassNo = result.dict.班级;
+		  var dictCallState = result.dict.签到状态;
+		  
+          $("tbody").empty();
+	      for (var i = 0; i < list.length; i++) {  
+		          var no = list[i][0];
+		          var name = list[i][1];
+				  var gender = dictGender[list[i][2]];
+				  var grade = list[i][3];
+				  var major = list[i][4];
+				  var classNo = dictClassNo[list[i][5]];
+                  var callDate = fmtDateTime(list[i][6]);
+                  var callState = dictCallState[list[i][7]];
+	              var tr = $("<tr></tr>");
+
+                  tr.html('<td>'+no+'</td><td>'+name +'</td>' 
+				  +'<td>'+gender+'</td><td>'+grade+'</td><td>'+major+'</td><td>'+classNo+'</td><td>'+callDate+'</td>'
+				   +'<td>'+callState+'</td>'
+				  );
+                  $("tbody").append(tr);
+				 
+	      }
+	  }
+	  
+	    /* ajax 请求更新数据 */
+      function sendAjax(page, size){
+ 	   reqestData(page, pageSize, false, false);
+      }
+
+
+	  
+	  
+	  function loadSelect(value){
+	  
+	        $.ajax({		 
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: urlBase+"/course_mng/list",//url
+                headers: {
+                  token: "" +  sessionStorage.getItem("token")
+                 },
+			   success: function (result) {
+				
+                    if(result.code==0){
+					  var data = result.data;
+					  courseList  = result.data;
+					  $.each(data, function (i, item) {
+                        $("#courseId").append("<option value='"+item.courseId+"'>"+item.courseName+"</option>");
+					    
+					  })
+					  
+					   if(value!=null&&value!=""){
+					     $("#courseId").val(value);
+					   }
+					  
+					}else{
+					    $.alert(result.errmsg);
+					}
+                    
+                },
+                error : function() {
+		
+				    alert("访问异常！");
+					return false;  
+                }
+            }); 
+	  
+	  }
+
+
+	  
+      $(function(){
+	      
+	      reqestData(1, pageSize, true , true);
+	  
+	  
+          $('select.styled').customSelect();
+      });
+
+  </script>
+
+  </body>
+</html>

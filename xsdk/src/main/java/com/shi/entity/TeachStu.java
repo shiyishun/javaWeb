@@ -11,8 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -47,16 +51,24 @@ public class TeachStu {
 	private String classNo;
 	
 	@Column(name="is_teacher")
-	private Integer isTecacher;
+	private Integer isTeacher;
 	
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "school_info_id")
 	private SchoolInfo schoolInfo;
 	
+	
+	@Transient
+	private String genderStr;
+	
+	@Transient
+	private String classNoStr;
 	
 	public String getTeachStuId() {
 		return teachStuId;
@@ -123,12 +135,12 @@ public class TeachStu {
 		this.classNo = classNo;
 	}
 
-	public Integer getIsTecacher() {
-		return isTecacher;
+	public Integer getIsTeacher() {
+		return isTeacher;
 	}
 
-	public void setIsTecacher(Integer isTecacher) {
-		this.isTecacher = isTecacher;
+	public void setIsTeacher(Integer isTeacher) {
+		this.isTeacher = isTeacher;
 	}
 
 	public User getUser() {
@@ -145,6 +157,23 @@ public class TeachStu {
 
 	public void setSchoolInfo(SchoolInfo schoolInfo) {
 		this.schoolInfo = schoolInfo;
+	}
+
+	public String getGenderStr() {
+		return genderStr;
+	}
+
+	public void setGenderStr(String genderStr) {
+		this.genderStr = genderStr;
+	}
+
+	public String getClassNoStr() {
+		return classNoStr;
+	}
+
+	public void setClassNoStr(String classNoStr) {
+		this.classNoStr = classNoStr;
 	} 
+	
 	
 }

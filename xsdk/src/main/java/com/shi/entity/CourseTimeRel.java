@@ -7,9 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -26,7 +29,8 @@ public class CourseTimeRel {
     @JoinColumn(name = "course_id")  
     private Course course;
     
-    @ManyToOne(fetch = FetchType.LAZY)  
+    
+    @OneToOne(fetch = FetchType.LAZY)  
     @JoinColumn(name = "course_time_id")  
     private CourseTime courseTime;
 
@@ -38,6 +42,7 @@ public class CourseTimeRel {
 		this.courseTimeRelId = courseTimeRelId;
 	}
 
+	@JsonIgnore
 	public Course getCourse() {
 		return course;
 	}
@@ -46,6 +51,7 @@ public class CourseTimeRel {
 		this.course = course;
 	}
 
+	@JsonIgnore
 	public CourseTime getCourseTime() {
 		return courseTime;
 	}

@@ -23,7 +23,7 @@ public class PermiController {
 	
 	@ResponseBody
 	@RequestMapping(value = "page")
-	public JSONObject pageByRoleId(String param, String roleId, String no, String size) {
+	public JSONObject getPage(String param, String roleId, String no, String size) {
 		JSONObject json = new JSONObject();
 	
 		if(no==null||no.equals("")){
@@ -32,12 +32,7 @@ public class PermiController {
 		if(size==null||size.equals("")){
 			size="10";
 		}
-		if(roleId==null||roleId.equals("")){
-			json.put("code", "10023");
-			json.put("errmsg", "获取参数失败");
-		}
-		
-		
+	
 	    int pageNo = Integer.valueOf(no);
 		int pageSize = Integer.valueOf(size);
 		Page<Permi> page = permiService.getPage(param, roleId, pageNo, pageSize);
