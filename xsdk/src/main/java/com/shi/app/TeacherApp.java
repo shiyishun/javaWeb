@@ -91,13 +91,16 @@ public class TeacherApp {
 				json.put("errmsg", "请输入教师账号");
 				return json;
 			}
-			
+			  
 				String token = ComUtil.GetGUID();
 				HashMap<String, Object> userMap = new HashMap<String, Object>();
 				userMap.put("user", user);
 				ComUtil.loginMap.put(token, userMap);
+				JSONObject sJson = new JSONObject();
+				sJson.put("userId", user.getUserId());
+				sJson.put("userName", user.getUserName());
 				json.put("code", "0");
-				json.put("data", token);
+				json.put("data", sJson);
 				logger.info("手机用户："+user.getUserName() +"-登陆成功!");
 				return json;
 		} catch (Exception e) {
