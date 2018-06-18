@@ -15,5 +15,7 @@ public interface CourseService {
 	
 	public void saveOrUpdate(Course course);
 	
+	public void update(Course course);
+	
 	public List<Course> findByUserId(String userId);
 }

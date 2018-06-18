@@ -262,6 +262,13 @@
 		
 		function logout(){
 		
+		  var token = sessionStorage.getItem("token");
+		  if(token==null||token==""||token=='undefined'){
+		    sessionStorage.setItem("token", ""); 
+		    $(window).attr('location','login.html');   
+		    return;
+		  }
+		 
 		  $.ajax({
 			 
                 type: "POST",//方法类型
@@ -269,16 +276,18 @@
                 url: urlBase+"/user_mng/logout" ,//url
                 data: '',
 				 headers: {
-                  token: "" +  sessionStorage.getItem("token")
+                  token: "" +  token
                  },
 	            xhrFields: {
                   withCredentials: true
                 },
                 success: function (result) {
+                   sessionStorage.setItem("token", "");  
 				   $(window).attr('location','login.html'); 
                 },
                 error : function() {
-                    $.alert("访问异常！");
+                    $.alert("访问异常,请重新登陆！");
+                    $(window).attr('location','login.html'); 
 				
                 }
             }); 

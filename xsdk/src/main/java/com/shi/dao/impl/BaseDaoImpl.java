@@ -27,6 +27,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
@@ -227,7 +228,26 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		this.setParameterToQuery(q, params);
 		return q.list();
 	}
+	
+	public List<Map<String, Object>> findList2(String hql, Map<String, Object> params) {
+		Query q = this.getCurrentSession().createQuery(hql).
+				setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		this.setParameterToQuery(q, params);
+		return q.list();
+	}
 
+	public Map<String, Object> getMap2(String hql, Map<String, Object> params) {
+		Query q = this.getCurrentSession().createQuery(hql).
+				setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		this.setParameterToQuery(q, params);
+		List<Map<String, Object>> l = q.list();
+		if (l != null && l.size() > 0) {
+			return l.get(0);
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * 
 	 * @param hql

@@ -34,11 +34,22 @@ public class MarkServiceImpl implements MarkService {
 		return markDao.getById(markId);
 	}
 	
+	public Map<String, Object> getByIdHql(String markId){
+		String hql = "select m.markId as markId, m.user.teachStu.name as name, " +
+				" m.user.teachStu.no as no, m.course.courseName as courseName, " +
+				" m.dailyScore as dailyScore, m.finalScore as finalScore " +
+				" from Mark m where m.markId='"+markId+"'";
+		
+		return markDao.getMap2(hql, null);
+	}
+	
+	
+	
 	public void genMarkByCourseId(String courseId) throws Exception{
 		
 		String sql = "INSERT tb_mark(mark_id, course_id, user_id)"+ 
-		" select a.id, a.course_id, a.user_id from"+
-		" (select REPLACE(UUID(), '-', '') id ,c.course_id , u.user_id"+ 
+		" select REPLACE(UUID(), '-', ''), a.course_id, a.user_id from"+
+		" (select distinct c.course_id , u.user_id"+ 
 		" from tb_user_course_rel ucr"+ 
 		" LEFT JOIN tb_course c on ucr.course_id = c.course_id"+ 
 		" LEFT JOIN tb_user u on u.user_id=ucr.user_id ," +
@@ -59,7 +70,7 @@ public class MarkServiceImpl implements MarkService {
 		StringBuffer hql = new StringBuffer("select t.markId, " +
 				" t.user.teachStu.no, t.user.teachStu.name, t.user.teachStu.gender, " +
 				" t.user.teachStu.grade, t.user.teachStu.major, t.user.teachStu.classNo, " +
-		        " t.dailScore, t.examScore, t.finalScore "+
+		        " t.dailyScore, t.examScore, t.finalScore "+
 				" from Mark t where  t.user.teachStu.isTeacher=1 and " +
 				"(t.user.status=0 or t.user.status=1) and  t.course.courseId ='"+courseId+"'");
 		if(schoolInfoId!=null&&schoolInfoId.trim().equals("")){
@@ -87,5 +98,20 @@ public class MarkServiceImpl implements MarkService {
         return page;
 		
 	}
+	
+	
+	public List<Map<String, Object>> findByCourseId2(String courseId){
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		StringBuffer hql = new StringBuffer("select  m.markId as markId, " +
+				"m.user.teachStu.no as no," +
+				" m.user.teachStu.name as name," +
+				" m.dailyScore as dailyScore, m.finalScore as finalScore " +
+				" from Mark m where m.course.courseId=:courseId");
+		params.put("courseId", courseId);
+		
+		return markDao.findList2(hql.toString(), params);
+	}
+	
 	
 }

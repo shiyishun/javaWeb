@@ -118,7 +118,7 @@ public class MarkMngController {
 			json.put("errmsg", "获取成绩失败");	
 			return json;
 		}
-		mark.setDailScore(Float.valueOf(dailyScore));
+		mark.setDailyScore(Float.valueOf(dailyScore));
 		mark.setFinalScore(Float.valueOf(finalScore));
 		mark.setExamScore(Float.valueOf(examScore));
 	    markService.update(mark);
@@ -128,5 +128,6 @@ public class MarkMngController {
 		return json;
 	}
 	
-	
+
+
 }

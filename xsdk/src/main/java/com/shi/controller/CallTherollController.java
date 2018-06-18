@@ -54,7 +54,7 @@ public class CallTherollController {
 		String userId = user.getUserId();
 	    int pageNo = Integer.valueOf(no);
 		int pageSize = Integer.valueOf(size);
-		Page<CallTheroll> page = callTherollService.getStaticsPage(param, userId,pageNo, pageSize);
+		Page<CallTheroll> page = callTherollService.getStatisticsPage(param, userId,pageNo, pageSize);
 
 		Map<String, String> dictMap = DictUtil.dictKeyValue("星期");
 		JSONObject dictJson = new JSONObject();

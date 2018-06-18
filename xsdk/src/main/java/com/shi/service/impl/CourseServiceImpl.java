@@ -107,4 +107,9 @@ public class CourseServiceImpl implements CourseService {
 		return courseDao.findList(hql.toString());
 		
 	}
+	
+	
+	public void update(Course course){
+		courseDao.update(course);
+	}
 }

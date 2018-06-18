@@ -210,13 +210,12 @@ public class UserMngController {
 	public JSONObject logout(HttpServletRequest request) {
 
 		JSONObject json = new JSONObject();
-//		request.getSession().setAttribute("user", null);
-//		request.getSession().setAttribute("permis", null);
-//		request.getSession().setAttribute("noPermis", null);
 		String token = request.getHeader("token");
+
 		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
 		User user = (User) userMap.get("user");
 		ComUtil.loginMap.remove(token);
+		
 		json.put("code", "0");
 		json.put("data", "");
 		logger.info("用户："+user.getUserName() +"-退出登陆!");

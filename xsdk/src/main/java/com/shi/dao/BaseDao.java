@@ -50,6 +50,11 @@ public interface BaseDao<T, ID extends Serializable> {
 	public List<T> findList(String hql);
 
 	public List<T> findList(String hql, Map<String, Object> params);
+	
+	public List<Map<String, Object>> findList2(String hql, Map<String, Object> params);
+	
+	public Map<String, Object> getMap2(String hql, Map<String, Object> params); 
+	
 
 	public List<T> findTopList(String hql, int topCount);
 

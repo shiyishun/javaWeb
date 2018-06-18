@@ -50,10 +50,10 @@ public class Course {
 	private String classOrder;
 
 	@Column(name = "daily_weight")
-	private Double dailyWeight;
+	private Float dailyWeight;
 
 	@Column(name = "final_weight")
-	private Double finalWeight;
+	private Float finalWeight;
 
 	@Column(name = "picket_line")
 	private Integer picketLine;
@@ -138,19 +138,22 @@ public class Course {
 		this.classOrder = classOrder;
 	}
 
-	public Double getDailyWeight() {
+
+
+
+	public Float getDailyWeight() {
 		return dailyWeight;
 	}
 
-	public void setDailyWeight(Double dailyWeight) {
+	public void setDailyWeight(Float dailyWeight) {
 		this.dailyWeight = dailyWeight;
 	}
 
-	public Double getFinalWeight() {
+	public Float getFinalWeight() {
 		return finalWeight;
 	}
 
-	public void setFinalWeight(Double finalWeight) {
+	public void setFinalWeight(Float finalWeight) {
 		this.finalWeight = finalWeight;
 	}
 

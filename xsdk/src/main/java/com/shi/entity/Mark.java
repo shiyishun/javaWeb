@@ -34,7 +34,7 @@ public class Mark {
 	private User user;
 
 	@Column(name="daily_score")
-	private Float dailScore;
+	private Float dailyScore;
 	
 	@Column(name="exam_score")
 	private Float examScore;
@@ -67,12 +67,12 @@ public class Mark {
 		this.user = user;
 	}
 
-	public Float getDailScore() {
-		return dailScore;
+	public Float getDailyScore() {
+		return dailyScore;
 	}
 
-	public void setDailScore(Float dailScore) {
-		this.dailScore = dailScore;
+	public void setDailyScore(Float dailyScore) {
+		this.dailyScore = dailyScore;
 	}
 
 	public Float getExamScore() {
