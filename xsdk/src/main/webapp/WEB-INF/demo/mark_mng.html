@@ -302,7 +302,7 @@
             '</div>' +
 			'<div>' +
 			'<p id="infomsg" class="control-label">日常比重：'+dailyWeight+'，期末比重：'+finalWeight+'</p>' +
-			'<p id="infomsg" class="control-label">期末成绩=平时成绩*日常比重+考试成绩*期末比重</p>' +
+			'<p id="infomsg" class="control-label">期末成绩=平时成绩+考试成绩*期末比重</p>' +
             '</div>' +	
             '<div>' +
             '<p id="errmsg" class="text-danger"></p>' +
@@ -364,7 +364,7 @@
 		  
 	    $("#finalScore").blur(function(){
 		  if(valiFinalScore()){ 
-		    var examScore = $('#dailyScore').val()*dailyWeight + $('#finalScore').val()*finalWeight;
+		    var examScore = $('#dailyScore').val() + $('#finalScore').val()*finalWeight;
 		    $('#examScore').val(Number(examScore).toFixed(2));
 		  }
 		  
@@ -372,7 +372,7 @@
  
         $("#dailyScore").blur(function(){
 		  if(valiFinalScore()){ 
-		    var examScore = $('#dailyScore').val()*dailyWeight + $('#finalScore').val()*finalWeight;
+		    var examScore = $('#dailyScore').val() + $('#finalScore').val()*finalWeight;
 		    $('#examScore').val(Number(examScore).toFixed(2));
 		  }
 		  

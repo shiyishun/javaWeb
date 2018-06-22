@@ -205,8 +205,7 @@ public class TeacherApp {
 		mark.setDailyScore(Float.valueOf(dailyScore));
 		mark.setFinalScore(Float.valueOf(finalScore));
         Course course = mark.getCourse();
-		Float examScore = course.getDailyWeight()*mark.getDailyScore()
-		+ course.getFinalWeight()+mark.getFinalScore();
+		Float examScore = course.getDailyWeight() + course.getFinalWeight()*mark.getFinalScore();
         mark.setExamScore(examScore);
         
 		markService.update(mark);

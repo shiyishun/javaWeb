@@ -48,7 +48,7 @@ public class MarkServiceImpl implements MarkService {
 	public void genMarkByCourseId(String courseId) throws Exception{
 		
 		String sql = "INSERT tb_mark(mark_id, course_id, user_id)"+ 
-		" select REPLACE(UUID(), '-', ''), a.course_id, a.user_id from"+
+		" select UUID(), a.course_id, a.user_id from"+
 		" (select distinct c.course_id , u.user_id"+ 
 		" from tb_user_course_rel ucr"+ 
 		" LEFT JOIN tb_course c on ucr.course_id = c.course_id"+ 

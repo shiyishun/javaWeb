@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
-    <meta name="author" content="Dashboard">
-    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <meta name="author" content="shiyishun">
+    <meta name="keyword" content="学生,考勤,管理系统">
 
-    <title>DASHGUM - Bootstrap Admin Template</title>
+    <title>学生考勤后台管理系统</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -52,7 +52,6 @@
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery-1.8.3.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-	<script src="assets/js/jquery.md5.js"></script>
   	<script src="assets/js/myfun.js"></script>
     <!--BACKSTRETCH-->
     <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
@@ -60,6 +59,16 @@
     <script>
         $.backstretch("assets/img/login_bg.jpg", {speed: 500});
 		 javascript:window.history.forward(1); 
+		
+				
+		$(function(){
+              document.onkeydown = function(e){ 
+              var ev = document.all ? window.event : e;
+               if(ev.keyCode==13) {
+                toVaild();//处理事件
+               }
+        }
+        });  
 		
 	   function toVaild(){ 
 	         $("#errmsg").text("");
