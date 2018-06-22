@@ -102,5 +102,14 @@ public class TeachStuServiceImpl implements TeachStuService {
 
 		return listMap;
 	}
+	
+	
+	public List<TeachStu> findStuAll(){
+		
+		StringBuffer hql = new StringBuffer(
+				"from TeachStu t where t.isTeacher=1 "
+						+ "and (t.user.status=0 or t.user.status=1)");
+		return teachStuDao.findList(hql.toString());
+	}
 
 }

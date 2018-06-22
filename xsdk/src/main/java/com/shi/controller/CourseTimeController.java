@@ -1,8 +1,10 @@
 package com.shi.controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +29,9 @@ import com.shi.entity.UserCourseRel;
 import com.shi.service.CourseService;
 import com.shi.service.CourseTimeRelService;
 import com.shi.service.CourseTimeService;
+import com.shi.service.TeachStuService;
+import com.shi.service.UserCourseRelService;
+import com.shi.service.UserMngService;
 
 @Controller
 @RequestMapping(value = "course_time_mng/")
@@ -43,7 +48,15 @@ public class CourseTimeController {
 
 	@Autowired
 	private CourseService courseService;
+	@Autowired
+	private TeachStuService teachStuService;
+	@Autowired
+	private UserMngService userMngService;
 
+	@Autowired
+	private UserCourseRelService userCourseRelService;
+	
+	
 	@ResponseBody
 	@RequestMapping(value = "page")
 	public JSONObject pageCourse(String courseId, String no, String size,
@@ -118,6 +131,23 @@ public class CourseTimeController {
 			courseTimeRel.setCourse(course);
 			courseTimeRel.setCourseTime(courseTime);
 			courseTime.setCourseTimeRel(courseTimeRel);
+			List<User> stuUserList = userMngService.findStuUser();
+		
+			Set<UserCourseRel> userCourseRelSet = new HashSet<UserCourseRel>();
+			if(stuUserList!=null){
+				for(User stuUser: stuUserList){
+					UserCourseRel userCourseRel = new UserCourseRel();
+					userCourseRel.setCourse(course);
+					userCourseRel.setUser(stuUser);
+					userCourseRel.setCourseTime(courseTime);
+					userCourseRelSet.add(userCourseRel);
+				}
+				course.setUserCourseRelSet(userCourseRelSet);
+			}
+			
+	
+			
+			
 		}
 		courseTime.setClassShape(classShape);
 		courseTime.setClassLocation(classLocation);

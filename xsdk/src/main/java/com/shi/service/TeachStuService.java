@@ -15,4 +15,6 @@ public interface TeachStuService {
 	public List<Map<String, Object>> getStudentByCourse(String courseId,
 			String courseClassNo);
 	
+	public List<TeachStu> findStuAll();
+	
 }

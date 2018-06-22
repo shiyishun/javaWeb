@@ -1,6 +1,7 @@
 package com.shi.service;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import com.shi.common.Page;
@@ -25,4 +26,6 @@ public interface UserMngService {
 	public Map<String, Object> getUserInfo(String userId);
 	
 	public User getById(String id);
+	
+	public List<User> findStuUser();
 }

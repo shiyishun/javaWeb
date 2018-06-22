@@ -184,4 +184,11 @@ public class UserMngServiceImpl implements UserMngService {
 		return userMngDao.getById(id);
 	}
 	
+	public List<User> findStuUser(){
+		StringBuffer hql = new StringBuffer(
+				"from User u where u.teachStu.isTeacher=1 "
+						+ "and (u.status=0 or u.status=1)");
+		return userMngDao.findList(hql.toString());
+	}
+	
 }
