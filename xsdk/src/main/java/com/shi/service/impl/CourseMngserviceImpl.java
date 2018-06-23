@@ -130,7 +130,7 @@ public class CourseMngserviceImpl implements CourseMngservice {
 	public List<Map<String, Object>> getAllCourseList(String sid) {
 		// TODO Auto-generated method stubDate date = new Date();
         System.out.println("suoyoukecheng #####");
-		StringBuffer sql = new StringBuffer("select uc.course_id, c.course_name, c.class_date, ct.class_location,ct.start_period as startPeriod,ct.end_period as endPeriod,ct.week " +
+		StringBuffer sql = new StringBuffer("select uc.course_id, c.course_name, c.class_date,  c.class_order, ct.class_location,ct.start_period as startPeriod,ct.end_period as endPeriod,ct.week " +
 				" from tb_user_course_rel uc left join tb_course c on uc.course_id=c.course_id left join tb_course_time ct on uc.course_time_id=ct.course_time_id ");
 		
 			Map<String, Object> params = new HashMap<String, Object>();
