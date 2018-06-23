@@ -71,7 +71,7 @@ public class StudentApp {
 				return json;
 			}		
 			if (user.getStatus() == 1) {
-				json.put("code", "1");
+				json.put("code", "2");
 				json.put("errmsg", "账号已被锁定，请联系管理员");
 				return json;
 			}
@@ -79,13 +79,13 @@ public class StudentApp {
 			String pwd = ComUtil.toMd5Str(password);
 
 			if (!user.getPwd().equals(pwd)) {
-				json.put("code", "2");
+				json.put("code", "3");
 				json.put("errmsg", "密码错误");
 				return json;
 			} 
 			if(user.getTeachStu().getIsTeacher()!=1){	
-				json.put("code", "3");
-				json.put("errmsg", "请输入教师账号");
+				json.put("code", "4");
+				json.put("errmsg", "请输入学生账号");
 				return json;
 			}
 			
@@ -121,7 +121,7 @@ public class StudentApp {
 	@RequestMapping(value = "logout")
 	public JSONObject logout(HttpServletRequest request) {
 
-		JSONObject json = new JSONObject();;
+		JSONObject json = new JSONObject();
 		String token = request.getHeader("token");
 		HashMap<String, Object> userMap =  ComUtil.loginMap.get(token);	
 		User user = (User) userMap.get("user");
