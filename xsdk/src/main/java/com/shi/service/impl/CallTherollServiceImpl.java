@@ -129,7 +129,7 @@ public class CallTherollServiceImpl implements CallTherollService {
 			String courseTimeId, String callOrder) {
 
 		StringBuffer hql = new StringBuffer(
-				"select ct.user.teachStu.no as no, ct.user.teachStu.name as name,"
+				"select ct.callTherollId as callTherollId, ct.user.teachStu.no as no, ct.user.teachStu.name as name,"
 						+ " ct.user.teachStu.gender as gender, ct.user.teachStu.grade as grade, "
 						+ " ct.user.teachStu.major as major, ct.callPosition as callPosition, "
 						+ " ct.user.teachStu.classNo as classNo, ct.callDate as callDate, "
@@ -214,5 +214,8 @@ public class CallTherollServiceImpl implements CallTherollService {
 
 	}
 
-	
+	public CallTheroll getById(String callTherollId){
+		
+	  return callTherollDao.getById(callTherollId);	
+	}
 }

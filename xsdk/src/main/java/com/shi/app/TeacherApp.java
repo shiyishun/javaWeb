@@ -205,7 +205,8 @@ public class TeacherApp {
 		mark.setDailyScore(Float.valueOf(dailyScore));
 		mark.setFinalScore(Float.valueOf(finalScore));
         Course course = mark.getCourse();
-		Float examScore = course.getDailyWeight() + course.getFinalWeight()*mark.getFinalScore();
+		Float examScore = mark.getDailyScore()*course.getDailyWeight() 
+				+ course.getFinalWeight()*mark.getFinalScore();
         mark.setExamScore(examScore);
         
 		markService.update(mark);
@@ -346,6 +347,22 @@ public class TeacherApp {
 		return json;
 	}
 
+	
+	@ResponseBody
+	@RequestMapping(value = "set_signin_state")
+	public JSONObject setSigninState(HttpServletRequest request,
+			HttpServletResponse response, String callTherollId, String callState){
+		
+		JSONObject json = new JSONObject();
+		
+		CallTheroll callTheroll = callTherollService.getById(callTherollId);
+		callTheroll.setCallState(Integer.valueOf(callState));
+		callTheroll.setCallPosition("0*0");
+		callTherollService.update(callTheroll);
+		json.put("code", "0");
+		json.put("data", "");
+		return json;
+	}
 	
 	
 	

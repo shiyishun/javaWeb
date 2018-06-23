@@ -30,4 +30,6 @@ public interface CallTherollService {
 	
 	public List<Map<String, Object>> getStatisticsList(String userId);
 	
+	public CallTheroll getById(String callTherollId);
+	
 }
