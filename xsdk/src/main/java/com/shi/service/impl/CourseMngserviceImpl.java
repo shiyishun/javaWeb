@@ -98,25 +98,33 @@ public class CourseMngserviceImpl implements CourseMngservice {
 	@Override
 	public List<Map<String, Object>> getCourseList(String sid) {
 		// TODO Auto-generated method stub
-		Date date = new Date();
-	 	Calendar cal = Calendar.getInstance();  
-        cal.setTime(date);  
-        int w = cal.get(Calendar.DAY_OF_WEEK) - 1; 
-        System.out.println("xingqi #####"+w);
-		StringBuffer sql = new StringBuffer("select uc.course_id, c.course_name, c.class_date, ct.class_location,ct.start_period,ct.end_period,ct.class_shape,ct.course_time_id" +
-				" from tb_user_course_rel uc left join tb_course c on uc.course_id=c.course_id left join tb_course_time ct on uc.course_time_id=ct.course_time_id ");
-		
-			Map<String, Object> params = new HashMap<String, Object>();
-				if(sid!=null){
-					sql.append(" where uc.user_id =:sid");
-					sql.append(" and ct.week =:wid");
-					params.put("sid", sid);
-					params.put("wid", w);
-				}
-				sql.append(" order by c.course_no asc");
-				List<Map<String, Object>> maplist = new ArrayList<Map<String, Object>>();
-				maplist = courseDao.findListBySql(sql.toString(), params);
-		return maplist;
+//		Date date = new Date();
+//	 	Calendar cal = Calendar.getInstance();  
+//        cal.setTime(date);  
+//        int w = cal.get(Calendar.DAY_OF_WEEK) - 1; 
+//        System.out.println("xingqi #####"+w);
+//		StringBuffer sql = new StringBuffer("select uc.course_id, c.course_name, ct.class_location,ct.start_period,ct.end_period,ct.class_shape,ct.course_time_id" +
+//				" from tb_user_course_rel uc left join tb_course c on uc.course_id=c.course_id left join tb_course_time ct on uc.course_time_id=ct.course_time_id left join tb_call_theroll ctroll on");
+//		
+//			Map<String, Object> params = new HashMap<String, Object>();
+//				if(sid!=null){
+//					sql.append(" where uc.user_id =:sid");
+//					sql.append(" and ct.week =:wid");
+//					sql.append(" and ctroll.call_state = '0'");
+//					params.put("sid", sid);
+//					params.put("wid", w);
+//				}
+//				sql.append(" order by c.course_no asc");
+//				List<Map<String, Object>> maplist = new ArrayList<Map<String, Object>>();
+//				maplist = courseDao.findListBySql(sql.toString(), params);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String date = df.format(new Date()).toString();
+        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+		StringBuffer sql = new StringBuffer("select c.course_id, c.course_name, ct.class_location,ct.start_period,ct.end_period,ct.class_shape,ct.course_time_id "+
+        ",ctroll.call_theroll_id from tb_call_theroll ctroll left join tb_course c on ctroll.course_id = c.course_id left join tb_course_time ct on ctroll.course_time_id=ct.course_time_id where user_id="+sid + " and call_date like"+"'%"+date+"%' and call_state = '0'");
+		List<Map<String, Object>> reslist = new ArrayList<Map<String, Object>>();
+		reslist = courseDao.findListBySql(sql.toString());
+		return reslist;
 	}
 	@Override
 	public List<Map<String, Object>> getAllCourseList(String sid) {
